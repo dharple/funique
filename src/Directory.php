@@ -39,8 +39,19 @@ class Directory
 		$path = $this->getPath();
 
 		$dp = dir($path);
+
+		if ($dp === false) {
+			fprintf(STDERR, "could not read: " . $path . "\n");
+			return [];
+		}
+
 		while ($entry = $dp->read()) {
 			if ($entry == '.' || $entry == '..') {
+				continue;
+			}
+
+			// ignore .files for now
+			if (preg_match('/^\./', $entry)) {
 				continue;
 			}
 
