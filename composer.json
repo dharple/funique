@@ -1,0 +1,17 @@
+{
+    "name": "dharple/funique",
+    "description": "Finds files unique to one directory or another",
+    "type": "library",
+    "license": "BSD-2-Clause",
+    "authors": [
+        {
+            "name": "Doug Harple",
+            "email": "dharple@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Funique\\": "src/"
+        }
+    }
+}
