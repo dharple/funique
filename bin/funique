@@ -19,6 +19,8 @@ if ($argc < 3 || !is_dir($argv[1]) || !is_dir($argv[2])) {
 	exit(-1);
 }
 
+$sleepTime = 100000; // be nice
+
 $dirs = [
 	new \Funique\Directory($argv[1]),
 	new \Funique\Directory($argv[2])
@@ -34,70 +36,26 @@ foreach ($dirs as $which => $dir) {
 
 $sizeGroups = array_unique($sizeGroups, SORT_NUMERIC);
 
-foreach ($sizeGroups as $sizeGroup) {
-	if (array_key_exists($sizeGroup, $files[0]) && !array_key_exists($sizeGroup, $files[1])) {
-		foreach ($files[0][$sizeGroup] as $file) {
-			print($file->getPath() . "\n");
-		}
-		continue;
-	}
-
-	if (array_key_exists($sizeGroup, $files[1]) && !array_key_exists($sizeGroup, $files[0])) {
-		foreach ($files[1][$sizeGroup] as $file) {
-			print($file->getPath() . "\n");
-		}
-		continue;
-	}
-
+foreach ($sizeGroups as $sizeGroup)
+{
 	$filesA = $files[0][$sizeGroup];
 	$filesB = $files[1][$sizeGroup];
 
-	foreach ($filesA as $offsetA => $fileA) {
-		$sizeMatch = false;
-
+	foreach ($filesA as $fileA) {
 		foreach ($filesB as $fileB) {
+			if ($fileA->isUnique() === false && $fileB->isUnique() === false) {
+				continue;
+			}
+
 			if ($fileA->getSize() == $fileB->getSize()) {
 				if ($fileA->getSum() == $fileB->getSum()) {
 					$fileA->isUnique(false);
 					$fileB->isUnique(false);
 				}
-
-				$sizeMatch = true;
-				break;
+				// sleep; that operation was expensive
+				usleep($sleepTime);
 			}
 		}
-
-		if (!$sizeMatch) {
-			print($fileA->getPath() . "\n");
-			unset($filesA[$offsetA]);
-		}
-	}
-
-	foreach ($filesB as $offsetB => $fileB) {
-		$sizeMatch = false;
-
-		foreach ($filesA as $fileA) {
-			if ($fileB->getSize() == $fileA->getSize()) {
-				if ($fileA->getSum() == $fileB->getSum()) {
-					$fileA->isUnique(false);
-					$fileB->isUnique(false);
-
-//					print("DUPE: " . $fileA->getPath() . " === " . $fileB->getPath() . "\n");
-				}
-
-				$sizeMatch = true;
-				break;
-			}
-		}
-
-		if (!$sizeMatch) {
-			print($fileB->getPath() . "\n");
-			unset($filesB[$offsetB]);
-		}
-	}
-
-	if (empty($filesA) && empty($filesB)) {
-		continue;
 	}
 
 	foreach ($filesA as $fileA) {

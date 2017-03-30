@@ -7,6 +7,11 @@ class Directory
 
 	/**
 	 *
+	 */
+	protected $groupingDivisor = 256;
+
+	/**
+	 *
 	 * @var Directory
 	 */
 	protected $parent;
@@ -17,6 +22,11 @@ class Directory
 	 * @var string
 	 */
 	protected $path;
+
+	/**
+	 *
+	 */
+	protected $sleepTime = 100000; // ms
 
 	/**
 	 *
@@ -45,7 +55,9 @@ class Directory
 			return [];
 		}
 
-		while ($entry = $dp->read()) {
+		$entries = [];
+
+		while (($entry = $dp->read()) !== false) {
 			if ($entry == '.' || $entry == '..') {
 				continue;
 			}
@@ -55,11 +67,19 @@ class Directory
 				continue;
 			}
 
-			$fullPath = $path . '/' . $entry;
-
-			if (is_link($fullPath)) {
+			if (is_link($path . '/' . $entry)) {
 				continue;
 			}
+
+			$entries[] = $entry;
+		}
+
+		$dp->close();
+
+		usleep($this->sleepTime);
+
+		foreach ($entries as $entry) {
+			$fullPath = $path . '/' . $entry;
 
 			if (is_dir($fullPath)) {
 				$dir = new Directory($entry, $this);
@@ -76,7 +96,7 @@ class Directory
 
 			$file = new File($entry, $this);
 			$size = $file->getSize();
-			$sizeGroup = (string) floor($size / 1024);
+			$sizeGroup = (string) floor($size / $this->groupingDivisor);
 
 			if (!array_key_exists($sizeGroup, $ret)) {
 				$ret[$sizeGroup] = [];
@@ -84,8 +104,6 @@ class Directory
 
 			$ret[$sizeGroup][] = $file;
 		}
-
-		$dp->close();
 
 		ksort($ret);
 
