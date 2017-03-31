@@ -14,16 +14,15 @@ ini_set('memory_limit', '1G');
 
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
-if ($argc < 3 || !is_dir($argv[1]) || !is_dir($argv[2])) {
+if ($argc < 4 || !is_dir($argv[1]) || !is_dir($argv[2]) || !is_dir($argv[3])) {
 	fprintf(STDERR, "Usage:\n\t" . basename($argv[0]) . " DIR DIR\n");
 	exit(-1);
 }
 
-$sleepTime = 100000; // be nice
-
 $dirs = [
 	new \Funique\Directory($argv[1]),
-	new \Funique\Directory($argv[2])
+	new \Funique\Directory($argv[2]),
+	new \Funique\Directory($argv[3])
 ];
 
 $files = [];
@@ -38,8 +37,9 @@ $sizeGroups = array_unique($sizeGroups, SORT_NUMERIC);
 
 foreach ($sizeGroups as $sizeGroup)
 {
-	$filesA = $files[0][$sizeGroup];
-	$filesB = $files[1][$sizeGroup];
+	$filesA = array_key_exists($sizeGroup, $files[0]) ? $files[0][$sizeGroup] : [];
+	$filesB = array_key_exists($sizeGroup, $files[1]) ? $files[1][$sizeGroup] : [];
+	$filesC = array_key_exists($sizeGroup, $files[2]) ? $files[2][$sizeGroup] : [];
 
 	foreach ($filesA as $fileA) {
 		foreach ($filesB as $fileB) {
@@ -52,8 +52,19 @@ foreach ($sizeGroups as $sizeGroup)
 					$fileA->isUnique(false);
 					$fileB->isUnique(false);
 				}
-				// sleep; that operation was expensive
-				usleep($sleepTime);
+			}
+		}
+
+		foreach ($filesC as $fileC) {
+			if ($fileA->isUnique() === false && $fileC->isUnique() === false) {
+				continue;
+			}
+
+			if ($fileA->getSize() == $fileC->getSize()) {
+				if ($fileA->getSum() == $fileC->getSum()) {
+					$fileA->isUnique(false);
+					$fileC->isUnique(false);
+				}
 			}
 		}
 	}
@@ -70,6 +81,11 @@ foreach ($sizeGroups as $sizeGroup)
 		}
 	}
 
+	foreach ($filesC as $fileC) {
+		if ($fileC->isUnique()) {
+			print($fileC->getPath() . "\n");
+		}
+	}
 }
 
 // vim: ai:cin
