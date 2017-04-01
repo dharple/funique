@@ -142,40 +142,51 @@ class FuniqueCommand extends Command
 						continue;
 					}
 
+					if ($fileLeft->getSize() != $fileRight->getSize()) {
+						continue;
+					}
+
 					if ($output->isDebug()) {
 						$io->text('comparing left: ' . $fileLeft);
 						$io->text('against right:  ' . $fileRight);
+						$io->text('size matches');
 					}
 
-					if ($fileLeft->getSize() == $fileRight->getSize()) {
+					if ($fileLeft->getDevice() == $fileRight->getDevice() &&
+						$fileLeft->getInode() == $fileRight->getInode())
+					{
 						if ($output->isDebug()) {
-							$io->text('size matches');
+							$io->text('device and inode match');
 						}
 
-						if ($fileLeft->getDevice() == $fileRight->getDevice() &&
-							$fileLeft->getInode() == $fileRight->getInode())
-						{
+						$fileLeft->isUnique(false);
+						$fileRight->isUnique(false);
+
+						continue;
+					}
+
+					if ($fileLeft->getSize() > 65536) {
+						if ($fileLeft->getLeadingSum() != $fileRight->getLeadingSum()) {
 							if ($output->isDebug()) {
-								$io->text('device and inode match');
+								$io->text('leading checksum does not match');
 							}
-
-							$fileLeft->isUnique(false);
-							$fileRight->isUnique(false);
-
 							continue;
 						}
+						if ($output->isDebug()) {
+							$io->text('leading checksum matches');
+						}
+					}
 
-						if ($fileLeft->getSum() == $fileRight->getSum()) {
-							if ($output->isDebug()) {
-								$io->text('checksum matches');
-							}
-
-							$fileLeft->isUnique(false);
-							$fileRight->isUnique(false);
+					if ($fileLeft->getSum() == $fileRight->getSum()) {
+						if ($output->isDebug()) {
+							$io->text('checksum matches');
 						}
 
-						usleep($this->sleepTime);
+						$fileLeft->isUnique(false);
+						$fileRight->isUnique(false);
 					}
+
+					usleep($this->sleepTime);
 				}
 
 				if ($output->isVerbose() && !$output->isDebug()) {
@@ -237,6 +248,11 @@ class FuniqueCommand extends Command
 			}
 
 			$size = $entry->getSize();
+			if ($size == 0) {
+				// ignore empty files
+				continue;
+			}
+
 			$sizeGroup = (string) floor($size / $this->groupingDivisor);
 
 			if (!array_key_exists($sizeGroup, $ret)) {

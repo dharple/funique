@@ -39,6 +39,11 @@ class File
 	protected $isUnique = true;
 
 	/**
+	 *
+	 */
+	protected $leadingSum = null;
+
+	/**
 	 * cached size
 	 *
 	 * @var int
@@ -89,6 +94,25 @@ class File
 	}
 
 	/**
+	 * Returns the sum of the first 8K bytes
+	 */
+	public function getLeadingSum()
+	{
+		if ($this->leadingSum !== null) {
+			return $this->leadingSum;
+		}
+
+		$fp = fopen($this->getPath(), 'rb');
+		if ($fp === false) {
+			throw new \Exception('Unable to read ' . $this->getPath());
+		}
+		$header = fread($fp, 8192);
+		fclose($fp);
+
+		return $this->leadingSum = hash('md4', $header);
+	}
+
+	/**
 	 *
 	 */
 	public function getPath()
@@ -117,13 +141,7 @@ class File
 			return $this->sum;
 		}
 
-		if ($this->getSize() <= $this->sizeThreshold) {
-			$this->sum = md5(file_get_contents($this->getPath()));
-		} else {
-			$this->sum = exec('md5sum ' . escapeshellarg($this->getPath()) . ' | cut -f 1 -d " "');
-		}
-
-		return $this->sum;
+		return $this->sum = hash_file('md4', $this->getPath());
 	}
 
 	/**
