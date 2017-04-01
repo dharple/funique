@@ -3,13 +3,28 @@
 namespace Funique\Model;
 
 class File
+	extends Entry
 {
+
+	/**
+	 * cached device
+	 *
+	 * @var int
+	 */
+	protected $device = null;
 
 	/**
 	 *
 	 * @var Directory
 	 */
 	protected $dir;
+
+	/**
+	 * cached inode
+	 *
+	 * @var int
+	 */
+	protected $inode = null;
 
 	/**
 	 * filename
@@ -34,12 +49,7 @@ class File
 	 *
 	 * @var int
 	 */
-	protected $sizeThreshold = 16*1024*1024; // anything bigger than 16 megs runs md5 from the shell
-
-	/**
-	 *
-	 */
-	protected $sleepTime = 100000;
+	protected $sizeThreshold = 1024*1024; // anything bigger than 1 meg runs md5 from the shell
 
 	/**
 	 * cached checksum
@@ -57,6 +67,30 @@ class File
 	/**
 	 *
 	 */
+	public function getDevice()
+	{
+		if ($this->device === null) {
+			$this->loadStats();
+		}
+
+		return $this->device;
+	}
+
+	/**
+	 *
+	 */
+	public function getInode()
+	{
+		if ($this->inode === null) {
+			$this->loadStats();
+		}
+
+		return $this->inode;
+	}
+
+	/**
+	 *
+	 */
 	public function getPath()
 	{
 		return $this->dir->getPath() . '/' . $this->file;
@@ -67,11 +101,11 @@ class File
 	 */
 	public function getSize()
 	{
-		if ($this->size !== null) {
-			return $this->size;
+		if ($this->size === null) {
+			$this->loadStats();
 		}
 
-		return $this->size = filesize($this->getPath());
+		return $this->size;
 	}
 
 	/**
@@ -89,9 +123,6 @@ class File
 			$this->sum = exec('md5sum ' . escapeshellarg($this->getPath()) . ' | cut -f 1 -d " "');
 		}
 
-		// sleep briefly; that was expensive
-		usleep($this->sleepTime);
-
 		return $this->sum;
 	}
 
@@ -105,5 +136,22 @@ class File
 
 		return $this->isUnique = $isUnique;
 	}
+
+	/**
+	 *
+	 */
+	protected function loadStats()
+	{
+		if ($this->inode !== null) {
+			return;
+		}
+
+		$stat = stat($this->getPath());
+
+		$this->device = $stat['dev'];
+		$this->inode = $stat['ino'];
+		$this->size = $stat['size'];
+	}
+
 }
 

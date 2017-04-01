@@ -3,12 +3,8 @@
 namespace Funique\Model;
 
 class Directory
+	extends Entry
 {
-
-	/**
-	 *
-	 */
-	protected $groupingDivisor = 256;
 
 	/**
 	 *
@@ -26,11 +22,6 @@ class Directory
 	/**
 	 *
 	 */
-	protected $sleepTime = 100000; // ms
-
-	/**
-	 *
-	 */
 	public function __construct($path, $parent = null)
 	{
 		$this->path = str_replace('~', getenv('HOME'), preg_replace('@/$@', '', $path));
@@ -38,21 +29,18 @@ class Directory
 	}
 
 	/**
-	 * Does *not* cache.
+	 * Does not cache
 	 *
-	 * @return File[]
+	 * @return Entry[]
 	 */
-	public function getAllFiles()
+	public function getEntries($includeHidden = false, $followLinks = false)
 	{
-		$ret = [];
-
 		$path = $this->getPath();
 
 		$dp = dir($path);
 
 		if ($dp === false) {
-			fprintf(STDERR, "could not read: " . $path . "\n");
-			return [];
+			throw new \Exception('could not read directory: ' . $path);
 		}
 
 		$entries = [];
@@ -63,51 +51,26 @@ class Directory
 			}
 
 			// ignore .files for now
-			if (preg_match('/^\./', $entry)) {
+			if (!$includeHidden && preg_match('/^\./', $entry)) {
 				continue;
 			}
 
-			if (is_link($path . '/' . $entry)) {
+			if (!$followLinks && is_link($path . '/' . $entry)) {
 				continue;
 			}
 
-			$entries[] = $entry;
+			$fullPath = $path . '/' . $entry;
+
+			if (is_dir($fullPath)) {
+				$entries[] = new Directory($entry, $this);
+			} else {
+				$entries[] = new File($entry, $this);
+			}
 		}
 
 		$dp->close();
 
-		usleep($this->sleepTime);
-
-		foreach ($entries as $entry) {
-			$fullPath = $path . '/' . $entry;
-
-			if (is_dir($fullPath)) {
-				$dir = new Directory($entry, $this);
-				$merge = $dir->getAllFiles();
-				foreach ($merge as $sizeGroup => $files) {
-					if (!array_key_exists($sizeGroup, $ret)) {
-						$ret[$sizeGroup] = $files;
-					} else {
-						$ret[$sizeGroup] = array_merge($ret[$sizeGroup], $files);
-					}
-				}
-				continue;
-			}
-
-			$file = new File($entry, $this);
-			$size = $file->getSize();
-			$sizeGroup = (string) floor($size / $this->groupingDivisor);
-
-			if (!array_key_exists($sizeGroup, $ret)) {
-				$ret[$sizeGroup] = [];
-			}
-
-			$ret[$sizeGroup][] = $file;
-		}
-
-		ksort($ret);
-
-		return $ret;
+		return $entries;
 	}
 
 	/**
