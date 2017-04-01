@@ -12,80 +12,21 @@
 
 ini_set('memory_limit', '1G');
 
-require_once dirname(__DIR__) . '/vendor/autoload.php';
+require dirname(__DIR__) . '/vendor/autoload.php';
 
-if ($argc < 4 || !is_dir($argv[1]) || !is_dir($argv[2]) || !is_dir($argv[3])) {
-	fprintf(STDERR, "Usage:\n\t" . basename($argv[0]) . " DIR DIR\n");
-	exit(-1);
-}
+use Symfony\Component\Console\Application;
+use Funique\Command\FuniqueCommand;
 
-$dirs = [
-	new \Funique\Directory($argv[1]),
-	new \Funique\Directory($argv[2]),
-	new \Funique\Directory($argv[3])
-];
-
-$files = [];
-$sizeGroups = [];
-
-foreach ($dirs as $which => $dir) {
-	$files[$which] = $dir->getAllFiles();
-	$sizeGroups = array_merge($sizeGroups, array_keys($files[$which]));
-}
-
-$sizeGroups = array_unique($sizeGroups, SORT_NUMERIC);
-
-foreach ($sizeGroups as $sizeGroup)
-{
-	$filesA = array_key_exists($sizeGroup, $files[0]) ? $files[0][$sizeGroup] : [];
-	$filesB = array_key_exists($sizeGroup, $files[1]) ? $files[1][$sizeGroup] : [];
-	$filesC = array_key_exists($sizeGroup, $files[2]) ? $files[2][$sizeGroup] : [];
-
-	foreach ($filesA as $fileA) {
-		foreach ($filesB as $fileB) {
-			if ($fileA->isUnique() === false && $fileB->isUnique() === false) {
-				continue;
-			}
-
-			if ($fileA->getSize() == $fileB->getSize()) {
-				if ($fileA->getSum() == $fileB->getSum()) {
-					$fileA->isUnique(false);
-					$fileB->isUnique(false);
-				}
-			}
-		}
-
-		foreach ($filesC as $fileC) {
-			if ($fileA->isUnique() === false && $fileC->isUnique() === false) {
-				continue;
-			}
-
-			if ($fileA->getSize() == $fileC->getSize()) {
-				if ($fileA->getSum() == $fileC->getSum()) {
-					$fileA->isUnique(false);
-					$fileC->isUnique(false);
-				}
-			}
-		}
-	}
-
-	foreach ($filesA as $fileA) {
-		if ($fileA->isUnique()) {
-			print($fileA->getPath() . "\n");
-		}
-	}
-
-	foreach ($filesB as $fileB) {
-		if ($fileB->isUnique()) {
-			print($fileB->getPath() . "\n");
-		}
-	}
-
-	foreach ($filesC as $fileC) {
-		if ($fileC->isUnique()) {
-			print($fileC->getPath() . "\n");
-		}
-	}
+try {
+	$application = new Application('funique', '0.1.0');
+	$application->setCatchExceptions(false);
+	$command = new FuniqueCommand();
+	$application->add($command);
+	$application->setDefaultCommand($command->getName(), true);
+	$application->run();
+} catch (\Exception $e) {
+	fprintf(STDERR, 'ERROR: ' . $e->getMessage() . "\n");
+	exit(-2);
 }
 
 // vim: ai:cin

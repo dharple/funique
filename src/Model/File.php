@@ -1,6 +1,6 @@
 <?php
 
-namespace Funique;
+namespace Funique\Model;
 
 class File
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Funique;
+namespace Funique\Model;
 
 class Directory
 {
@@ -33,7 +33,7 @@ class Directory
 	 */
 	public function __construct($path, $parent = null)
 	{
-		$this->path = preg_replace('@/$@', '', $path);
+		$this->path = str_replace('~', getenv('HOME'), preg_replace('@/$@', '', $path));
 		$this->parent = $parent;
 	}
 

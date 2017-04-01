@@ -2,6 +2,9 @@
     "name": "dharple/funique",
     "description": "Finds files unique to one directory or another",
     "type": "library",
+    "require": {
+        "symfony/console": "^3.2"
+    },
     "license": "BSD-2-Clause",
     "authors": [
         {
