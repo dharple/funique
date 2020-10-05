@@ -18,15 +18,15 @@ use Symfony\Component\Console\Application;
 use Funique\Command\FuniqueCommand;
 
 try {
-	$application = new Application('funique', '0.1.0');
-	$application->setCatchExceptions(false);
-	$command = new FuniqueCommand();
-	$application->add($command);
-	$application->setDefaultCommand($command->getName(), true);
-	$application->run();
+    $application = new Application('funique', '0.1.0');
+    $application->setCatchExceptions(false);
+    $command = new FuniqueCommand();
+    $application->add($command);
+    $application->setDefaultCommand($command->getName(), true);
+    $application->run();
 } catch (\Exception $e) {
-	fprintf(STDERR, 'ERROR: ' . $e->getMessage() . "\n");
-	exit(-2);
+    fprintf(STDERR, 'ERROR: ' . $e->getMessage() . "\n");
+    exit(-2);
 }
 
-// vim: ai:cin
+// vim:ai:cin:et:ts=4:sw=4:fo+=or
