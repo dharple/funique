@@ -1,38 +1,62 @@
 <?php
 
+/**
+ * This file is part of the funique package.
+ *
+ * (c) Doug Harple <dharple@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Funique\Model;
 
+/**
+ * Describes a directory
+ */
 class Directory extends Entry
 {
 
     /**
+     * The parent directory
      *
      * @var Directory
      */
     protected $parent;
 
     /**
-     * path relative to parent, if set
+     * Path relative to parent, if set.
      *
      * @var string
      */
     protected $path;
 
     /**
+     * Constructs a new directory
      *
+     * @param string     $path   The path of this directory, relative to the parent.
+     * @param ?Directory $parent The parent directory.
      */
-    public function __construct($path, $parent = null)
+    public function __construct(string $path, ?Directory $parent = null)
     {
         $this->path = str_replace('~', getenv('HOME'), preg_replace('@/$@', '', $path));
         $this->parent = $parent;
     }
 
     /**
-     * Does not cache
+     * Returns an array of Entry records based on the contents of this Directory.
+     *
+     * Does not cache.
+     *
+     * @param bool $includeHidden Whether or not to include hidden files in the
+     *                            entries.
+     * @param bool $followLinks   Whether or not follow links.
      *
      * @return Entry[]
+     *
+     * @throws \Exception
      */
-    public function getEntries($includeHidden = false, $followLinks = false)
+    public function getEntries(bool $includeHidden = false, bool $followLinks = false)
     {
         $path = $this->getPath();
 
@@ -73,12 +97,12 @@ class Directory extends Entry
     }
 
     /**
+     * Returns the full path of this directory.
      *
+     * @return string
      */
-    public function getPath()
+    public function getPath(): string
     {
-        return $this->parent
-        ? $this->parent->getPath() . '/' . $this->path
-        : $this->path;
+        return isset($this->parent) ? $this->parent->getPath() . '/' . $this->path : $this->path;
     }
 }

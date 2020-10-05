@@ -6,12 +6,8 @@
     <file>bin</file>
     <file>src</file>
 
-    <rule ref="Generic.Files.LineLength">
-        <exclude-pattern>src/Migrations/*</exclude-pattern>
-    </rule>
-
-    <rule ref="vendor/ork/phpcs/Ork/Sniffs/Formatting">
-        <exclude-pattern>src/Migrations/*</exclude-pattern>
+    <rule ref="Squiz.Commenting.FunctionComment.EmptyThrows">
+        <exclude-pattern>src/*</exclude-pattern>
     </rule>
 
 </ruleset>

@@ -1,71 +1,99 @@
 <?php
 
+/**
+ * This file is part of the funique package.
+ *
+ * (c) Doug Harple <dharple@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Funique\Model;
 
+/**
+ * Describes a file
+ */
 class File extends Entry
 {
+    protected const FULL_CHECKSUM_ALGORITHM = 'sha512';
+    protected const LEADING_CHECKSUM_ALGORITHM = 'adler32';
+    protected const LEADING_CHECKSUM_SIZE = 8192;
 
     /**
-     * cached device
+     * Cached device information
      *
      * @var int
      */
     protected $device = null;
 
     /**
+     * The directory that this file lives in
      *
      * @var Directory
      */
     protected $dir;
 
     /**
-     * cached inode
-     *
-     * @var int
-     */
-    protected $inode = null;
-
-    /**
-     * filename
+     * The filename for this file
      *
      * @var string
      */
     protected $file;
 
     /**
+     * Cached inode information
      *
+     * @var int
+     */
+    protected $inode = null;
+
+    /**
+     * Whether or not this file is unique.
+     *
+     * @var boolean
      */
     protected $isUnique = true;
 
     /**
+     * A checksum calculated based on the initial few bytes of the file.
      *
+     * @var string
      */
     protected $leadingSum = null;
 
     /**
-     * cached size
+     * Cached filesize
      *
      * @var int
      */
     protected $size = null;
 
     /**
-     * cached checksum
+     * A checksum for the file.
      *
      * @var string
      */
     protected $sum = null;
 
-    public function __construct($file, $dir)
+    /**
+     * Constructs a new File
+     *
+     * @param string    $file The filename.
+     * @param Directory $dir  The Directory object where this file lives.
+     */
+    public function __construct(string $file, Directory $dir)
     {
         $this->file = $file;
         $this->dir = $dir;
     }
 
     /**
+     * Returns the device for this file.
      *
+     * @return int
      */
-    public function getDevice()
+    public function getDevice(): int
     {
         if ($this->device === null) {
             $this->loadStats();
@@ -75,9 +103,11 @@ class File extends Entry
     }
 
     /**
+     * Returns the inode for this file.
      *
+     * @return int
      */
-    public function getInode()
+    public function getInode(): int
     {
         if ($this->inode === null) {
             $this->loadStats();
@@ -87,9 +117,13 @@ class File extends Entry
     }
 
     /**
-     * Returns the sum of the first 8K bytes
+     * Returns the sum of the first n bytes.
+     *
+     * @return string
+     *
+     * @throws \Exception
      */
-    public function getLeadingSum()
+    public function getLeadingSum(): string
     {
         if ($this->leadingSum !== null) {
             return $this->leadingSum;
@@ -99,24 +133,28 @@ class File extends Entry
         if ($fp === false) {
             throw new \Exception('Unable to read ' . $this->getPath());
         }
-        $header = fread($fp, 8192);
+        $header = fread($fp, static::LEADING_CHECKSUM_SIZE);
         fclose($fp);
 
-        return $this->leadingSum = hash('adler32', $header);
+        return $this->leadingSum = hash(static::LEADING_CHECKSUM_ALGORITHM, $header);
     }
 
     /**
+     * Returns the full path information
      *
+     * @return string
      */
-    public function getPath()
+    public function getPath(): string
     {
         return $this->dir->getPath() . '/' . $this->file;
     }
 
     /**
+     * Returns the file size
      *
+     * @return int
      */
-    public function getSize()
+    public function getSize(): int
     {
         if ($this->size === null) {
             $this->loadStats();
@@ -126,21 +164,27 @@ class File extends Entry
     }
 
     /**
+     * Returns the checksum for the entire file.
      *
+     * @return string
      */
-    public function getSum()
+    public function getSum(): string
     {
         if ($this->sum !== null) {
             return $this->sum;
         }
 
-        return $this->sum = hash_file('sha512', $this->getPath());
+        return $this->sum = hash_file(FULL_CHECKSUM_ALGORITHM, $this->getPath());
     }
 
     /**
+     * Whether or not the file is unique.  Defaults to true.
      *
+     * @param ?bool $isUnique Pass to set, leave off to return.
+     *
+     * @return bool
      */
-    public function isUnique($isUnique = null)
+    public function isUnique(?bool $isUnique = null): bool
     {
         if ($isUnique === null) {
             return $this->isUnique;
@@ -150,7 +194,9 @@ class File extends Entry
     }
 
     /**
+     * Loads the results of a stat() call into appropriate variables.
      *
+     * @return void
      */
     protected function loadStats()
     {

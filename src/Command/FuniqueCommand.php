@@ -1,37 +1,50 @@
 <?php
 
 /**
+ * This file is part of the funique package.
  *
+ * (c) Doug Harple <dharple@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Funique\Command;
 
+use Funique\Model\Directory;
+use Funique\Model\File;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputDefinition;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
- *
+ * Runs the full funique command.
  */
 class FuniqueCommand extends Command
 {
 
     /**
+     * The number of bytes in each size group.
      *
+     * @var int
      */
     protected $groupingDivisor = 256;
 
     /**
      * Sleep time in microseconds
+     *
+     * @var int
      */
     protected $sleepTime = 100000;
 
     /**
-     * Configues funique
+     * Configues funique.
+     *
+     * @return void
      */
     protected function configure()
     {
@@ -67,7 +80,14 @@ class FuniqueCommand extends Command
     }
 
     /**
-     * Runs detox
+     * Runs the funique command.
+     *
+     * @param InputInterface  $input  The input interface.
+     * @param OutputInterface $output The output interface.
+     *
+     * @return int
+     *
+     * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -105,7 +125,7 @@ class FuniqueCommand extends Command
                     $io->text('loading ' . $side . '-hand side directory: ' . $path);
                 }
 
-                $dir = new \Funique\Model\Directory($path);
+                $dir = new Directory($path);
                 $dirFiles = $this->loadDirectory($dir, $input, $output, $io);
                 foreach ($dirFiles as $sizeGroup => $contents) {
                     if (array_key_exists($sizeGroup, $files[$side])) {
@@ -230,12 +250,21 @@ class FuniqueCommand extends Command
         }
 
         fclose($outputHandle);
+
+        return 0;
     }
 
     /**
+     * Loads the contents of a directory.
+     *
+     * @param Directory       $dir    The directory to load.
+     * @param InputInterface  $input  The input interface.
+     * @param OutputInterface $output The output interface.
+     * @param SymfonyStyle    $io     A CLI styling interface.
+     *
      * @return File[][]
      */
-    protected function loadDirectory($dir, $input, $output, $io)
+    protected function loadDirectory(Directory $dir, InputInterface $input, OutputInterface $output, SymfonyStyle $io)
     {
         $ret = [];
 
@@ -254,7 +283,7 @@ class FuniqueCommand extends Command
         // files first
 
         foreach ($entries as $entry) {
-            if ($entry instanceof \Funique\Model\Directory) {
+            if (!($entry instanceof File)) {
                 continue;
             }
 
@@ -276,7 +305,7 @@ class FuniqueCommand extends Command
         // then directories
 
         foreach ($entries as $entry) {
-            if ($entry instanceof \Funique\Model\File) {
+            if (!($entry instanceof Directory)) {
                 continue;
             }
 
