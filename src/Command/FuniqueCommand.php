@@ -185,13 +185,13 @@ class FuniqueCommand extends Command
 						$fileLeft->isUnique(false);
 						$fileRight->isUnique(false);
 					}
-
-					usleep($this->sleepTime);
 				}
 
 				if ($output->isVerbose() && !$output->isDebug()) {
 					$io->progressAdvance();
 				}
+
+				usleep($this->sleepTime);
 			}
 
 		}

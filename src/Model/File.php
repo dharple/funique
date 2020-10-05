@@ -109,7 +109,7 @@ class File
 		$header = fread($fp, 8192);
 		fclose($fp);
 
-		return $this->leadingSum = hash('md4', $header);
+		return $this->leadingSum = hash('adler32', $header);
 	}
 
 	/**
@@ -141,7 +141,7 @@ class File
 			return $this->sum;
 		}
 
-		return $this->sum = hash_file('md4', $this->getPath());
+		return $this->sum = hash_file('sha512', $this->getPath());
 	}
 
 	/**
