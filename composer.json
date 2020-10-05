@@ -1,10 +1,7 @@
 {
     "name": "dharple/funique",
     "description": "Finds files unique to one directory or another",
-    "type": "library",
-    "require": {
-        "symfony/console": "^3.2"
-    },
+    "type": "package",
     "license": "BSD-2-Clause",
     "authors": [
         {
@@ -12,9 +9,24 @@
             "email": "dharple@gmail.com"
         }
     ],
+    "require": {
+        "symfony/console": "^3.2"
+    },
+    "require-dev": {
+        "outsanity/phpcs": "*",
+        "phpstan/phpstan": "^0.12.48"
+    },
+    "config": {
+        "sort-packages": true
+    },
     "autoload": {
         "psr-4": {
             "Funique\\": "src/"
         }
+    },
+    "scripts": {
+        "phpcbf":  "phpcbf",
+        "phpcs":   "phpcs",
+        "phpstan": "phpstan analyse"
     }
 }

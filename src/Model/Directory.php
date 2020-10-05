@@ -2,8 +2,7 @@
 
 namespace Funique\Model;
 
-class Directory
-    extends Entry
+class Directory extends Entry
 {
 
     /**
@@ -79,8 +78,7 @@ class Directory
     public function getPath()
     {
         return $this->parent
-            ? $this->parent->getPath() . '/' . $this->path
-            : $this->path;
+        ? $this->parent->getPath() . '/' . $this->path
+        : $this->path;
     }
-
 }

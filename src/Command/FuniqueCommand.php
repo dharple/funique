@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  */
@@ -25,9 +26,9 @@ class FuniqueCommand extends Command
     protected $groupingDivisor = 256;
 
     /**
-     *
+     * Sleep time in microseconds
      */
-    protected $sleepTime = 100000; // ms
+    protected $sleepTime = 100000;
 
     /**
      * Configues funique
@@ -37,19 +38,31 @@ class FuniqueCommand extends Command
         $this
             ->setName('funique')
             ->setDefinition(
-                new InputDefinition(array(
-                    new InputOption('left', null, 
+                new InputDefinition([
+                    new InputOption(
+                        'left',
+                        null,
                         InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
-                        'the left-hand directory or directories', []),
+                        'the left-hand directory or directories',
+                        []
+                    ),
 
-                    new InputOption('right', null,
+                    new InputOption(
+                        'right',
+                        null,
                         InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
-                        'the right-hand directory or directories', []),
+                        'the right-hand directory or directories',
+                        []
+                    ),
 
-                    new InputOption('output', 'o',
+                    new InputOption(
+                        'output',
+                        'o',
                         InputOption::VALUE_REQUIRED,
-                        'redirect output to file', ''),
-                ))
+                        'redirect output to file',
+                        ''
+                    ),
+                ])
             );
     }
 
@@ -121,8 +134,7 @@ class FuniqueCommand extends Command
             $io->progressStart($leftHandCount);
         }
 
-        foreach ($sizeGroups as $sizeGroup)
-        {
+        foreach ($sizeGroups as $sizeGroup) {
             if (empty($files['left'][$sizeGroup]) || empty($files['right'][$sizeGroup])) {
                 continue;
             }
@@ -152,9 +164,10 @@ class FuniqueCommand extends Command
                         $io->text('size matches');
                     }
 
-                    if ($fileLeft->getDevice() == $fileRight->getDevice() &&
-                        $fileLeft->getInode() == $fileRight->getInode())
-                    {
+                    if (
+                        $fileLeft->getDevice() == $fileRight->getDevice() &&
+                        $fileLeft->getInode() == $fileRight->getInode()
+                    ) {
                         if ($output->isDebug()) {
                             $io->text('device and inode match');
                         }
@@ -193,15 +206,13 @@ class FuniqueCommand extends Command
 
                 usleep($this->sleepTime);
             }
-
         }
 
         if ($output->isVerbose() && !$output->isDebug()) {
             $io->progressFinish();
         }
 
-        foreach ($sizeGroups as $sizeGroup)
-        {
+        foreach ($sizeGroups as $sizeGroup) {
             $filesLeft = array_key_exists($sizeGroup, $files['left']) ? $files['left'][$sizeGroup] : [];
             $filesRight = array_key_exists($sizeGroup, $files['right']) ? $files['right'][$sizeGroup] : [];
 
@@ -243,7 +254,7 @@ class FuniqueCommand extends Command
         // files first
 
         foreach ($entries as $entry) {
-            if ($entry instanceOf \Funique\Model\Directory) {
+            if ($entry instanceof \Funique\Model\Directory) {
                 continue;
             }
 
@@ -265,7 +276,7 @@ class FuniqueCommand extends Command
         // then directories
 
         foreach ($entries as $entry) {
-            if ($entry instanceOf \Funique\Model\File) {
+            if ($entry instanceof \Funique\Model\File) {
                 continue;
             }
 
@@ -283,6 +294,4 @@ class FuniqueCommand extends Command
 
         return $ret;
     }
-
 }
-

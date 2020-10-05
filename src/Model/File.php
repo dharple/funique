@@ -2,8 +2,7 @@
 
 namespace Funique\Model;
 
-class File
-    extends Entry
+class File extends Entry
 {
 
     /**
@@ -49,12 +48,6 @@ class File
      * @var int
      */
     protected $size = null;
-
-    /**
-     *
-     * @var int
-     */
-    protected $sizeThreshold = 1024*1024; // anything bigger than 1 meg runs md5 from the shell
 
     /**
      * cached checksum
@@ -147,7 +140,8 @@ class File
     /**
      *
      */
-    public function isUnique($isUnique = null) {
+    public function isUnique($isUnique = null)
+    {
         if ($isUnique === null) {
             return $this->isUnique;
         }
@@ -170,6 +164,4 @@ class File
         $this->inode = $stat['ino'];
         $this->size = $stat['size'];
     }
-
 }
-

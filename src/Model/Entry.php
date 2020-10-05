@@ -17,6 +17,4 @@ abstract class Entry
     {
         return $this->getPath();
     }
-
 }
-
