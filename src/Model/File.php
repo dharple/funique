@@ -174,7 +174,7 @@ class File extends Entry
             return $this->sum;
         }
 
-        return $this->sum = hash_file(FULL_CHECKSUM_ALGORITHM, $this->getPath());
+        return $this->sum = hash_file(static::FULL_CHECKSUM_ALGORITHM, $this->getPath());
     }
 
     /**
