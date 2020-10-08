@@ -39,7 +39,7 @@ class FuniqueCommand extends Command
      *
      * @var int
      */
-    protected $sleepTime = 100000;
+    protected $sleepTime = 1000;
 
     /**
      * Configues funique.
@@ -169,6 +169,8 @@ class FuniqueCommand extends Command
             $filesRight = array_key_exists($sizeGroup, $files['right']) ? $files['right'][$sizeGroup] : [];
 
             foreach ($filesLeft as $fileLeft) {
+                $iterationCount = 0;
+
                 foreach ($filesRight as $fileRight) {
                     if ($fileLeft->isUnique() === false && $fileRight->isUnique() === false) {
                         continue;
@@ -217,6 +219,10 @@ class FuniqueCommand extends Command
 
                         $fileLeft->isUnique(false);
                         $fileRight->isUnique(false);
+                    }
+
+                    if (++$iterationCount % 10 == 0) {
+                        usleep($this->sleepTime);
                     }
                 }
 
