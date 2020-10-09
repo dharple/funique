@@ -13,7 +13,10 @@ namespace Funique\Command;
 
 use Funique\Model\Directory;
 use Funique\Model\File;
+use Funique\Service\DirectoryService;
+use Funique\Service\FileService;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Command\HelpCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
@@ -26,6 +29,19 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  */
 class FuniqueCommand extends Command
 {
+    /**
+     * The directory service.
+     *
+     * @var DirectoryService
+     */
+    protected $directoryService;
+
+    /**
+     * The file service.
+     *
+     * @var FileService
+     */
+    protected $fileService;
 
     /**
      * The number of bytes in each size group.
@@ -42,6 +58,20 @@ class FuniqueCommand extends Command
     protected $sleepTime = 1000;
 
     /**
+     * Constructs a new funique command.
+     *
+     * @return mixed
+     */
+    public function __construct()
+    {
+        parent::__construct();
+
+        // Application isn't doing DI
+        $this->directoryService = new DirectoryService();
+        $this->fileService = new FileService();
+    }
+
+    /**
      * Configues funique.
      *
      * @return void
@@ -50,33 +80,10 @@ class FuniqueCommand extends Command
     {
         $this
             ->setName('funique')
-            ->setDefinition(
-                new InputDefinition([
-                    new InputOption(
-                        'left',
-                        null,
-                        InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
-                        'the left-hand directory or directories',
-                        []
-                    ),
-
-                    new InputOption(
-                        'right',
-                        null,
-                        InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
-                        'the right-hand directory or directories',
-                        []
-                    ),
-
-                    new InputOption(
-                        'output',
-                        'o',
-                        InputOption::VALUE_REQUIRED,
-                        'redirect output to file',
-                        ''
-                    ),
-                ])
-            );
+            ->setDescription('compares two sets of directories and reports files unique to one or the other')
+            ->addOption('left', 'l', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'the left-hand directory or directories', [])
+            ->addOption('right', 'r', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'the right-hand directory or directories', [])
+            ->addOption('output', 'o', InputOption::VALUE_REQUIRED, 'redirect output to file', '');
     }
 
     /**
@@ -85,9 +92,7 @@ class FuniqueCommand extends Command
      * @param InputInterface  $input  The input interface.
      * @param OutputInterface $output The output interface.
      *
-     * @return int
-     *
-     * @throws \Exception
+     * @return mixed
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -97,7 +102,10 @@ class FuniqueCommand extends Command
 
         foreach ($sides as $side) {
             if (count($input->getOption($side)) == 0) {
-                throw new \Exception('Please specify at least one ' . $side . '-hand directory to review');
+                $io->error(sprintf('please specify at least one %s-hand directory to review', $side));
+                $help = new HelpCommand();
+                $help->setCommand($this);
+                return $help->run($input, $output);
             }
         }
 
@@ -105,12 +113,12 @@ class FuniqueCommand extends Command
 
         $outputHandle = fopen($outputFile ?: 'php://stdout', 'w');
         if ($outputHandle == false) {
-            throw new \Exception('Unable to open ' .
-                ($outputFile ?: 'STDOUT') . ' for writing');
+            $io->error(sprintf('unable to open %s for writing', $outputFile ?: 'STDOUT'));
+            return Command::FAILURE;
         }
 
         if ($output->isVerbose() && $outputFile) {
-            $io->text('redirecting output to ' . $outputFile);
+            $io->text(sprintf('redirecting output to %s', $outputFile));
         }
 
         $files = [];
@@ -122,11 +130,15 @@ class FuniqueCommand extends Command
 
             foreach ($input->getOption($side) as $path) {
                 if ($output->isVerbose()) {
-                    $io->text('loading ' . $side . '-hand side directory: ' . $path);
+                    $io->text(sprintf('loading %s-hand side directory: %s', $side, $path));
                 }
 
                 $dir = new Directory($path);
-                $dirFiles = $this->loadDirectory($dir, $input, $output, $io);
+                $dirFiles = $this->directoryService->loadDirectory(
+                    $dir,
+                    $this->groupingDivisor,
+                    $output->isDebug() ? $io : null
+                );
                 foreach ($dirFiles as $sizeGroup => $contents) {
                     if (array_key_exists($sizeGroup, $files[$side])) {
                         $files[$side][$sizeGroup] = array_merge($files[$side][$sizeGroup], $contents);
@@ -155,18 +167,20 @@ class FuniqueCommand extends Command
         }
 
         foreach ($sizeGroups as $sizeGroup) {
-            if (empty($files['left'][$sizeGroup]) || empty($files['right'][$sizeGroup])) {
+            $filesLeft = array_key_exists($sizeGroup, $files['left']) ? $files['left'][$sizeGroup] : [];
+            $filesRight = array_key_exists($sizeGroup, $files['right']) ? $files['right'][$sizeGroup] : [];
+
+            if (empty($filesLeft) || empty($filesRight)) {
                 continue;
             }
 
             if ($output->isDebug()) {
-                $io->text('reviewing files between ' .
-                    (($sizeGroup - 1) * $this->groupingDivisor) . ' and ' .
-                    ($sizeGroup * $this->groupingDivisor) . ' bytes ');
+                $io->text(sprintf(
+                    'reviewing files between %d and %d bytes',
+                    (($sizeGroup - 1) * $this->groupingDivisor),
+                    ($sizeGroup * $this->groupingDivisor)
+                ));
             }
-
-            $filesLeft = array_key_exists($sizeGroup, $files['left']) ? $files['left'][$sizeGroup] : [];
-            $filesRight = array_key_exists($sizeGroup, $files['right']) ? $files['right'][$sizeGroup] : [];
 
             foreach ($filesLeft as $fileLeft) {
                 $iterationCount = 0;
@@ -176,47 +190,7 @@ class FuniqueCommand extends Command
                         continue;
                     }
 
-                    if ($fileLeft->getSize() != $fileRight->getSize()) {
-                        continue;
-                    }
-
-                    if ($output->isDebug()) {
-                        $io->text('comparing left: ' . $fileLeft);
-                        $io->text('against right:  ' . $fileRight);
-                        $io->text('size matches');
-                    }
-
-                    if (
-                        $fileLeft->getDevice() == $fileRight->getDevice() &&
-                        $fileLeft->getInode() == $fileRight->getInode()
-                    ) {
-                        if ($output->isDebug()) {
-                            $io->text('device and inode match');
-                        }
-
-                        $fileLeft->isUnique(false);
-                        $fileRight->isUnique(false);
-
-                        continue;
-                    }
-
-                    if ($fileLeft->getSize() > 65536) {
-                        if ($fileLeft->getLeadingSum() != $fileRight->getLeadingSum()) {
-                            if ($output->isDebug()) {
-                                $io->text('leading checksum does not match');
-                            }
-                            continue;
-                        }
-                        if ($output->isDebug()) {
-                            $io->text('leading checksum matches');
-                        }
-                    }
-
-                    if ($fileLeft->getSum() == $fileRight->getSum()) {
-                        if ($output->isDebug()) {
-                            $io->text('checksum matches');
-                        }
-
+                    if ($this->fileService->sameFile($fileLeft, $fileRight, $io)) {
                         $fileLeft->isUnique(false);
                         $fileRight->isUnique(false);
                     }
@@ -244,89 +218,19 @@ class FuniqueCommand extends Command
 
             foreach ($filesLeft as $fileLeft) {
                 if ($fileLeft->isUnique()) {
-                    fprintf($outputHandle, $fileLeft . "\n");
+                    fprintf($outputHandle, "%s\n", $fileLeft);
                 }
             }
 
             foreach ($filesRight as $fileRight) {
                 if ($fileRight->isUnique()) {
-                    fprintf($outputHandle, $fileRight . "\n");
+                    fprintf($outputHandle, "%s\n", $fileRight);
                 }
             }
         }
 
         fclose($outputHandle);
 
-        return 0;
-    }
-
-    /**
-     * Loads the contents of a directory.
-     *
-     * @param Directory       $dir    The directory to load.
-     * @param InputInterface  $input  The input interface.
-     * @param OutputInterface $output The output interface.
-     * @param SymfonyStyle    $io     A CLI styling interface.
-     *
-     * @return File[][]
-     */
-    protected function loadDirectory(Directory $dir, InputInterface $input, OutputInterface $output, SymfonyStyle $io)
-    {
-        $ret = [];
-
-        if ($output->isDebug()) {
-            $io->text('loading dir: ' . $dir);
-        }
-
-        try {
-            $entries = $dir->getEntries();
-        } catch (\Exception $e) {
-            return [];
-        }
-
-        usleep($this->sleepTime);
-
-        // files first
-
-        foreach ($entries as $entry) {
-            if (!($entry instanceof File)) {
-                continue;
-            }
-
-            $size = $entry->getSize();
-            if ($size == 0) {
-                // ignore empty files
-                continue;
-            }
-
-            $sizeGroup = (string) floor($size / $this->groupingDivisor);
-
-            if (!array_key_exists($sizeGroup, $ret)) {
-                $ret[$sizeGroup] = [];
-            }
-
-            $ret[$sizeGroup][] = $entry;
-        }
-
-        // then directories
-
-        foreach ($entries as $entry) {
-            if (!($entry instanceof Directory)) {
-                continue;
-            }
-
-            $merge = $this->loadDirectory($entry, $input, $output, $io);
-            foreach ($merge as $sizeGroup => $files) {
-                if (!array_key_exists($sizeGroup, $ret)) {
-                    $ret[$sizeGroup] = $files;
-                } else {
-                    $ret[$sizeGroup] = array_merge($ret[$sizeGroup], $files);
-                }
-            }
-        }
-
-        ksort($ret);
-
-        return $ret;
+        return Command::SUCCESS;
     }
 }
