@@ -19,6 +19,7 @@ class File extends Entry
     protected const FULL_CHECKSUM_ALGORITHM = 'sha512';
     protected const LEADING_CHECKSUM_ALGORITHM = 'adler32';
     protected const LEADING_CHECKSUM_SIZE = 8192;
+    protected const LEADING_CHECKSUM_MINIMUM_FILESIZE = 8192;
 
     /**
      * Cached device information
@@ -199,10 +200,17 @@ class File extends Entry
      */
     public function isSameAs(File $other): bool
     {
-        return ($this->getSize() == $other->getSize() &&
-            $this->getLeadingSum() != $other->getLeadingSum() &&
-            $this->getSum() == $other->getSum()
-        );
+        if ($this->getSize() != $other->getSize()) {
+            return false;
+        }
+
+        if ($this->getSize() > static::LEADING_CHECKSUM_MINIMUM_FILESIZE) {
+            if ($this->getLeadingSum() != $other->getLeadingSum()) {
+                return false;
+            }
+        }
+
+        return ($this->getSum() == $other->getSum());
     }
 
     /**
