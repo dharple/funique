@@ -17,8 +17,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Provides service methods for Directory objects
- *
- * @todo move grouping divisor entirely to this class
  */
 class DirectoryService
 {
@@ -32,19 +30,17 @@ class DirectoryService
     /**
      * Loads the contents of a directory.
      *
-     * @param Directory     $dir             The directory to load.
-     * @param int           $groupingDivisor The divisor to split up groups by.
-     * @param ?SymfonyStyle $io              A CLI styling interface.
+     * @param Directory    $dir             The directory to load.
+     * @param int          $groupingDivisor The divisor to split up groups by.
+     * @param SymfonyStyle $debugIo         A CLI styling interface.
      *
      * @return File[][]
      */
-    public function loadDirectory(Directory $dir, int $groupingDivisor, ?SymfonyStyle $io = null)
+    public function loadDirectory(Directory $dir, int $groupingDivisor, SymfonyStyle $debugIo)
     {
         $ret = [];
 
-        if (isset($io)) {
-            $io->text(sprintf('loading dir: %s', $dir));
-        }
+        $debugIo->text(sprintf('loading dir: %s', $dir));
 
         try {
             $entries = $dir->getEntries();
@@ -83,7 +79,7 @@ class DirectoryService
                 continue;
             }
 
-            $merge = $this->loadDirectory($entry, $groupingDivisor, $io);
+            $merge = $this->loadDirectory($entry, $groupingDivisor, $debugIo);
             foreach ($merge as $sizeGroup => $files) {
                 if (!array_key_exists($sizeGroup, $ret)) {
                     $ret[$sizeGroup] = $files;

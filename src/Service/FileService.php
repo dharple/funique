@@ -17,60 +17,31 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Provides service methods for File objects
- *
- * @todo switch from debugging to screen to logging?
  */
 class FileService
 {
-    protected const LARGE_FILE = 65536;
-
     /**
      * Determines whether or not two files are the same.
      *
-     * @param File          $fileLeft  The left hand file.
-     * @param File          $fileRight The right hand file.
-     * @param ?SymfonyStyle $io        A CLI styling interface.
+     * @param File         $fileLeft  The left hand file.
+     * @param File         $fileRight The right hand file.
+     * @param SymfonyStyle $debugIo   A CLI styling interface.
      *
      * @return bool
      */
-    public function sameFile(File $fileLeft, File $fileRight, ?SymfonyStyle $io = null): bool
+    public function sameFile(File $fileLeft, File $fileRight, SymfonyStyle $debugIo): bool
     {
-        if ($fileLeft->getSize() != $fileRight->getSize()) {
-            return false;
-        }
-
-        if (isset($io)) {
-            $io->text(sprintf('comparing left: %s', $fileLeft));
-            $io->text(sprintf('against right:  %s', $fileRight));
-            $io->text('size matches');
-        }
-
-        if ($fileLeft->getDevice() == $fileRight->getDevice() && $fileLeft->getInode() == $fileRight->getInode()) {
-            if (isset($io)) {
-                $io->text('device and inode match');
-            }
-
+        if ($fileLeft->isHardlinkOf($fileRight)) {
+            $debugIo->text(sprintf('comparing left: %s', $fileLeft));
+            $debugIo->text(sprintf('against right:  %s', $fileRight));
+            $debugIo->text('device and inode match');
             return true;
         }
 
-        if ($fileLeft->getSize() > static::LARGE_FILE) {
-            if ($fileLeft->getLeadingSum() != $fileRight->getLeadingSum()) {
-                if (isset($io)) {
-                    $io->text('leading checksum does not match');
-                }
-                return false;
-            }
-
-            if (isset($io)) {
-                $io->text('leading checksum matches');
-            }
-        }
-
-        if ($fileLeft->getSum() == $fileRight->getSum()) {
-            if (isset($io)) {
-                $io->text('checksum matches');
-            }
-
+        if ($fileLeft->isSameAs($fileRight)) {
+            $debugIo->text(sprintf('comparing left: %s', $fileLeft));
+            $debugIo->text(sprintf('against right:  %s', $fileRight));
+            $debugIo->text('size and checksum match');
             return true;
         }
 

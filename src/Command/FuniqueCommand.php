@@ -22,6 +22,7 @@ use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
@@ -97,6 +98,7 @@ class FuniqueCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $io = new SymfonyStyle($input, $output);
+        $debugIo = $output->isDebug() ? $io : new SymfonyStyle($input, new NullOutput());
 
         $sides = ['left', 'right'];
 
@@ -134,11 +136,7 @@ class FuniqueCommand extends Command
                 }
 
                 $dir = new Directory($path);
-                $dirFiles = $this->directoryService->loadDirectory(
-                    $dir,
-                    $this->groupingDivisor,
-                    $output->isDebug() ? $io : null
-                );
+                $dirFiles = $this->directoryService->loadDirectory($dir, $this->groupingDivisor, $debugIo);
                 foreach ($dirFiles as $sizeGroup => $contents) {
                     if (array_key_exists($sizeGroup, $files[$side])) {
                         $files[$side][$sizeGroup] = array_merge($files[$side][$sizeGroup], $contents);
@@ -174,13 +172,11 @@ class FuniqueCommand extends Command
                 continue;
             }
 
-            if ($output->isDebug()) {
-                $io->text(sprintf(
-                    'reviewing files between %d and %d bytes',
-                    (($sizeGroup - 1) * $this->groupingDivisor),
-                    ($sizeGroup * $this->groupingDivisor)
-                ));
-            }
+            $debugIo->text(sprintf(
+                'reviewing files between %d and %d bytes',
+                (($sizeGroup - 1) * $this->groupingDivisor),
+                ($sizeGroup * $this->groupingDivisor)
+            ));
 
             foreach ($filesLeft as $fileLeft) {
                 $iterationCount = 0;
@@ -190,7 +186,7 @@ class FuniqueCommand extends Command
                         continue;
                     }
 
-                    if ($this->fileService->sameFile($fileLeft, $fileRight, $io)) {
+                    if ($this->fileService->sameFile($fileLeft, $fileRight, $debugIo)) {
                         $fileLeft->isUnique(false);
                         $fileRight->isUnique(false);
                     }

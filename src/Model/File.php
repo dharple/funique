@@ -178,6 +178,34 @@ class File extends Entry
     }
 
     /**
+     * Determines whether or not this file is hardlinked to another file.
+     *
+     * @param File $other The other file to review.
+     *
+     * @return bool
+     */
+    public function isHardlinkOf(File $other): bool
+    {
+        return ($this->getInode() == $other->getInode() && $this->getDevice() == $other->getDevice());
+    }
+
+    /**
+     * Determines whether or not this file has the same contents as another
+     * file.
+     *
+     * @param File $other The other file to review.
+     *
+     * @return bool
+     */
+    public function isSameAs(File $other): bool
+    {
+        return ($this->getSize() == $other->getSize() &&
+            $this->getLeadingSum() != $other->getLeadingSum() &&
+            $this->getSum() == $other->getSum()
+        );
+    }
+
+    /**
      * Whether or not the file is unique.  Defaults to true.
      *
      * @param ?bool $isUnique Pass to set, leave off to return.
