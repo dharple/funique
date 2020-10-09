@@ -178,9 +178,9 @@ class FuniqueCommand extends Command
                 ($sizeGroup * $this->groupingDivisor)
             ));
 
-            foreach ($filesLeft as $fileLeft) {
-                $iterationCount = 0;
+            $iterationCount = 0;
 
+            foreach ($filesLeft as $fileLeft) {
                 foreach ($filesRight as $fileRight) {
                     if ($fileLeft->isUnique() === false && $fileRight->isUnique() === false) {
                         continue;
@@ -190,17 +190,15 @@ class FuniqueCommand extends Command
                         $fileLeft->isUnique(false);
                         $fileRight->isUnique(false);
                     }
-
-                    if (++$iterationCount % 10 == 0) {
-                        usleep($this->sleepTime);
-                    }
                 }
 
                 if ($output->isVerbose() && !$output->isDebug()) {
                     $io->progressAdvance();
                 }
 
-                usleep($this->sleepTime);
+                if (++$iterationCount % 10 == 0) {
+                    usleep($this->sleepTime);
+                }
             }
         }
 
