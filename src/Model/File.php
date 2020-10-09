@@ -18,8 +18,8 @@ class File extends Entry
 {
     protected const FULL_CHECKSUM_ALGORITHM = 'sha512';
     protected const LEADING_CHECKSUM_ALGORITHM = 'adler32';
-    protected const LEADING_CHECKSUM_SIZE = 8192;
-    protected const LEADING_CHECKSUM_MINIMUM_FILESIZE = 8192;
+    protected const LEADING_CHECKSUM_MINIMUM_FILESIZE = 128*1024;
+    protected const LEADING_CHECKSUM_SIZE = 2*1024;
 
     /**
      * Cached device information
