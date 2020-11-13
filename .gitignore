@@ -1,2 +1,8 @@
+###> normal development ###
+.idea
+*.lock
+*.orig
+*.patch
+*.rej
 /vendor/
-composer.lock
+###< normal development ###
