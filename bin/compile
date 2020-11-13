@@ -1,0 +1,31 @@
+#!/usr/bin/php -d phar.readonly=0
+<?php
+// with thanks to: https://blog.programster.org/creating-phar-files
+
+$pharFile = 'dist/funique.phar';
+$base = dirname(__DIR__);
+
+if (file_exists($pharFile)) {
+    unlink($pharFile);
+}
+
+$phar = new Phar($base . '/' . $pharFile);
+
+$phar->startBuffering();
+
+$defaultStub = $phar->createDefaultStub('bin/funique');
+
+$phar->buildFromDirectory($base, '/^.*\.php/');
+$phar->addFile($base . '/bin/funique', 'bin/funique');
+
+$stub = "#!/usr/bin/php \n" . $defaultStub;
+
+$phar->setStub($stub);
+
+$phar->stopBuffering();
+
+$phar->compressFiles(Phar::GZ);
+
+chmod($base . '/' . $pharFile, 0755);
+
+echo "$pharFile successfully created" . PHP_EOL;
