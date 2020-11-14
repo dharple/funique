@@ -27,6 +27,7 @@
         }
     },
     "scripts": {
+        "compile": "bin/compile",
         "phpcbf":  "phpcbf",
         "phpcs":   "phpcs",
         "phpstan": "phpstan analyse",

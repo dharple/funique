@@ -1,6 +1,20 @@
 #!/usr/bin/php -d phar.readonly=0
 <?php
-// with thanks to: https://blog.programster.org/creating-phar-files
+
+/**
+ * This file is part of the funique package.
+ *
+ * (c) Doug Harple <dharple@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+/**
+ * Builds a .phar archive for deployment.
+ *
+ * Thanks to: https://blog.programster.org/creating-phar-files
+ */
 
 $base = dirname(__DIR__);
 $distDir = $base . '/dist';
@@ -14,24 +28,29 @@ if (file_exists($pharFile)) {
     unlink($pharFile);
 }
 
-$phar = new Phar($pharFile);
+try {
+    $phar = new Phar($pharFile);
+    $phar->startBuffering();
 
-$phar->convertToExecutable(Phar::PHAR, Phar::GZ);
+    $phar->buildFromDirectory($base, '@[.]php$@');
 
-$phar->startBuffering();
+    $contents = file($base . '/bin/funique');
+    array_shift($contents);
+    $phar->addFromString('bin/funique', implode('', $contents));
 
-$phar->buildFromDirectory($base, '/^.*\.php/');
+    $phar->setStub(file_get_contents($base . '/phar/stub.php'));
 
-$contents = file($base . '/bin/funique');
-array_shift($contents);
-$phar->addFromString('bin/funique', implode('', $contents));
+    $phar->compressFiles(Phar::GZ);
+    $phar->setSignatureAlgorithm(Phar::SHA512);
 
-$phar->setStub("#!/usr/bin/php\n" . $phar->createDefaultStub('bin/funique'));
-
-$phar->stopBuffering();
+    $phar->stopBuffering();
+} catch (Exception $e) {
+    fprintf(STDERR, 'ERROR: ' . $e->getMessage() . "\n");
+    exit(-2);
+}
 
 chmod($pharFile, 0755);
 
-echo "$pharFile successfully created" . PHP_EOL;
+printf("%s created\n", $pharFile);
 
 // vim:ai:cin:et:ts=4:sw=4:fo+=or
