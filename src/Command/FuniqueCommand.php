@@ -12,13 +12,10 @@
 namespace Funique\Command;
 
 use Funique\Model\Directory;
-use Funique\Model\File;
 use Funique\Service\DirectoryService;
 use Funique\Service\FileService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Command\HelpCommand;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -60,8 +57,6 @@ class FuniqueCommand extends Command
 
     /**
      * Constructs a new funique command.
-     *
-     * @return mixed
      */
     public function __construct()
     {
@@ -73,7 +68,7 @@ class FuniqueCommand extends Command
     }
 
     /**
-     * Configues funique.
+     * Configures funique.
      *
      * @return void
      */

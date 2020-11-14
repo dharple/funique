@@ -11,6 +11,8 @@
 
 namespace Funique\Model;
 
+use Exception;
+
 /**
  * Describes a directory
  */
@@ -54,7 +56,7 @@ class Directory extends Entry
      *
      * @return Entry[]
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function getEntries(bool $includeHidden = false, bool $followLinks = false)
     {
@@ -63,7 +65,7 @@ class Directory extends Entry
         $dp = dir($path);
 
         if ($dp === false) {
-            throw new \Exception('could not read directory: ' . $path);
+            throw new Exception('could not read directory: ' . $path);
         }
 
         $entries = [];

@@ -24,7 +24,7 @@ try {
     $application->add($command);
     $application->setDefaultCommand($command->getName(), true);
     $application->run();
-} catch (\Exception $e) {
+} catch (Exception $e) {
     fprintf(STDERR, 'ERROR: ' . $e->getMessage() . "\n");
     exit(-2);
 }

@@ -11,7 +11,6 @@
 
 namespace Funique\Service;
 
-use Funique\Model\Directory;
 use Funique\Model\File;
 use Symfony\Component\Console\Style\SymfonyStyle;
 

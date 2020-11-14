@@ -11,6 +11,8 @@
 
 namespace Funique\Model;
 
+use Exception;
+
 /**
  * Describes a file
  */
@@ -122,7 +124,7 @@ class File extends Entry
      *
      * @return string
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function getLeadingSum(): string
     {
@@ -132,7 +134,7 @@ class File extends Entry
 
         $fp = fopen($this->getPath(), 'rb');
         if ($fp === false) {
-            throw new \Exception('Unable to read ' . $this->getPath());
+            throw new Exception('Unable to read ' . $this->getPath());
         }
         $header = fread($fp, static::LEADING_CHECKSUM_SIZE);
         fclose($fp);
@@ -179,7 +181,7 @@ class File extends Entry
     }
 
     /**
-     * Determines whether or not this file is hardlinked to another file.
+     * Determines whether or not this file is hard linked to another file.
      *
      * @param File $other The other file to review.
      *

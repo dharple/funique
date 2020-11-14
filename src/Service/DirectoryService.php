@@ -11,6 +11,7 @@
 
 namespace Funique\Service;
 
+use Exception;
 use Funique\Model\Directory;
 use Funique\Model\File;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -44,7 +45,7 @@ class DirectoryService
 
         try {
             $entries = $dir->getEntries();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return [];
         }
 
