@@ -4,6 +4,7 @@
     <rule ref="vendor/outsanity/phpcs/Outsanity/ruleset.xml" />
 
     <file>bin</file>
+    <file>phar</file>
     <file>src</file>
 
     <rule ref="Squiz.Commenting.FunctionComment.EmptyThrows">

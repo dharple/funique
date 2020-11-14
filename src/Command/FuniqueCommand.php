@@ -11,6 +11,7 @@
 
 namespace Outsanity\Funique\Command;
 
+use Exception;
 use Outsanity\Funique\Model\BaseDirectory;
 use Outsanity\Funique\Model\Directory;
 use Outsanity\Funique\Service\DirectoryService;
@@ -90,6 +91,8 @@ class FuniqueCommand extends Command
      * @param OutputInterface $output The output interface.
      *
      * @return mixed
+     *
+     * @throws Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

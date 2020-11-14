@@ -11,8 +11,6 @@
 
 namespace Outsanity\Funique\Model;
 
-use Exception;
-
 /**
  * Describes a directory
  */

@@ -95,6 +95,8 @@ class File extends Entry
      * Returns the device for this file.
      *
      * @return int
+     *
+     * @throws Exception
      */
     public function getDevice(): int
     {
@@ -109,6 +111,8 @@ class File extends Entry
      * Returns the inode for this file.
      *
      * @return int
+     *
+     * @throws Exception
      */
     public function getInode(): int
     {
@@ -166,6 +170,8 @@ class File extends Entry
      * Returns the file size
      *
      * @return int
+     *
+     * @throws Exception
      */
     public function getSize(): int
     {
@@ -196,6 +202,8 @@ class File extends Entry
      * @param File $other The other file to review.
      *
      * @return bool
+     *
+     * @throws Exception
      */
     public function isHardlinkOf(File $other): bool
     {
@@ -209,6 +217,8 @@ class File extends Entry
      * @param File $other The other file to review.
      *
      * @return bool
+     *
+     * @throws Exception
      */
     public function isSameAs(File $other): bool
     {
@@ -245,6 +255,8 @@ class File extends Entry
      * Loads the results of a stat() call into appropriate variables.
      *
      * @return void
+     *
+     * @throws Exception
      */
     protected function loadStats()
     {
