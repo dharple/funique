@@ -1,4 +1,4 @@
-# [Unreleased]
+# [0.2.1] - 2020-11-14
 ## Fixed
 - Fixed fatal error encountered when a file could not be stat'd.
 - Fixed installation instructions and process.
