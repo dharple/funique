@@ -65,7 +65,7 @@ class DirectoryService
                     continue;
                 }
             } catch (Exception $e) {
-                $debugIo->text(sprintf('<error>unable to load size on %s</error>', $entry->getPath()));
+                $debugIo->text(sprintf('unable to load size on %s', $entry->getPath()));
                 continue;
             }
 
