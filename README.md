@@ -38,5 +38,10 @@ You can redirect output, either with `>` or with `--output`, and you can get
 additional information, including a progress bar, using `-v`.  Double up the
 `-v` to see each file as its processed.
 
+# Known Limitations
+
+Phar compression fails when development dependencies have been installed.  This
+is treated as a soft failure; the phar works either way.
+
 [backintime]: https://github.com/bit-team/backintime
 [rsnapshot]: https://rsnapshot.org/
