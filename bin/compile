@@ -16,20 +16,19 @@ if (file_exists($pharFile)) {
 
 $phar = new Phar($pharFile);
 
+$phar->convertToExecutable(Phar::PHAR, Phar::GZ);
+
 $phar->startBuffering();
 
-$defaultStub = $phar->createDefaultStub('bin/funique');
-
 $phar->buildFromDirectory($base, '/^.*\.php/');
-$phar->addFile($base . '/bin/funique', 'bin/funique');
 
-$stub = "#!/usr/bin/php \n" . $defaultStub;
+$contents = file($base . '/bin/funique');
+array_shift($contents);
+$phar->addFromString('bin/funique', implode('', $contents));
 
-$phar->setStub($stub);
+$phar->setStub("#!/usr/bin/php\n" . $phar->createDefaultStub('bin/funique'));
 
 $phar->stopBuffering();
-
-$phar->compressFiles(Phar::GZ);
 
 chmod($pharFile, 0755);
 
