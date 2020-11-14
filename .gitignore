@@ -2,8 +2,10 @@
 *.lock
 *.orig
 *.patch
-/dist/
 *.rej
-.idea
+.phpunit.result.cache
+/.idea/
+/dist/
 /vendor/
+phpunit.xml
 ###< normal development ###

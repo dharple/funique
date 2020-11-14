@@ -134,7 +134,7 @@ class File extends Entry
 
         $fp = fopen($this->getPath(), 'rb');
         if ($fp === false) {
-            throw new Exception('Unable to read ' . $this->getPath());
+            throw new Exception(sprintf('Unable to read %s', $this->getPath()));
         }
         $header = fread($fp, static::LEADING_CHECKSUM_SIZE);
         fclose($fp);
@@ -242,7 +242,10 @@ class File extends Entry
             return;
         }
 
-        $stat = stat($this->getPath());
+        $stat = @stat($this->getPath());
+        if ($stat === false) {
+            throw new Exception(sprintf('Unable to stat %s', $this->getPath()));
+        }
 
         $this->device = $stat['dev'];
         $this->inode = $stat['ino'];

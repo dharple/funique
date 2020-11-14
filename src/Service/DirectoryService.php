@@ -58,10 +58,14 @@ class DirectoryService
                 continue;
             }
 
-            $size = $entry->getSize();
-            if ($size == 0) {
-                // ignore empty files
-                continue;
+            try {
+                $size = $entry->getSize();
+                if ($size == 0) {
+                    // ignore empty files
+                    continue;
+                }
+            } catch (Exception $e) {
+                $debugIo->text(sprintf('<error>unable to load size on %s</error>', $file->getPath()));
             }
 
             $sizeGroup = (string) floor($size / $groupingDivisor);

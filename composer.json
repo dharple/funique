@@ -15,7 +15,8 @@
     },
     "require-dev": {
         "outsanity/phpcs": "*",
-        "phpstan/phpstan": "^0.12.48"
+        "phpstan/phpstan": "^0.12.48",
+        "phpunit/phpunit": "^9.4"
     },
     "config": {
         "sort-packages": true
@@ -28,6 +29,7 @@
     "scripts": {
         "phpcbf":  "phpcbf",
         "phpcs":   "phpcs",
-        "phpstan": "phpstan analyse"
+        "phpstan": "phpstan analyse",
+        "test":    "phpunit"
     }
 }
