@@ -1,5 +1,5 @@
 {
-    "name": "dharple/funique",
+    "name": "outsanity/funique",
     "description": "Finds files unique to one directory or another",
     "type": "package",
     "license": "BSD-2-Clause",
