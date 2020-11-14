@@ -2,14 +2,19 @@
 <?php
 // with thanks to: https://blog.programster.org/creating-phar-files
 
-$pharFile = 'dist/funique.phar';
 $base = dirname(__DIR__);
+$distDir = $base . '/dist';
+$pharFile = $distDir . '/funique.phar';
+
+if (!is_dir($distDir)) {
+    mkdir($distDir);
+}
 
 if (file_exists($pharFile)) {
     unlink($pharFile);
 }
 
-$phar = new Phar($base . '/' . $pharFile);
+$phar = new Phar($pharFile);
 
 $phar->startBuffering();
 
@@ -26,6 +31,8 @@ $phar->stopBuffering();
 
 $phar->compressFiles(Phar::GZ);
 
-chmod($base . '/' . $pharFile, 0755);
+chmod($pharFile, 0755);
 
 echo "$pharFile successfully created" . PHP_EOL;
+
+// vim:ai:cin:et:ts=4:sw=4:fo+=or

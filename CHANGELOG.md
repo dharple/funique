@@ -1,3 +1,7 @@
+# [Unreleased]
+## Fixed
+- Fixed installation instructions and process.
+
 # [0.2.0] - 2020-11-13
 ## Added
 - Basic documentation.
