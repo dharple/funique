@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Funique\Model;
+namespace Outsanity\Funique\Model;
 
 /**
  * Describes either a directory or a file

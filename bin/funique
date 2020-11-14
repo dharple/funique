@@ -15,7 +15,7 @@ ini_set('memory_limit', '1G');
 require dirname(__DIR__) . '/vendor/autoload.php';
 
 use Symfony\Component\Console\Application;
-use Funique\Command\FuniqueCommand;
+use Outsanity\Funique\Command\FuniqueCommand;
 
 try {
     $application = new Application('funique', '0.2.0');

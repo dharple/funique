@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Funique\Service;
+namespace Outsanity\Funique\Service;
 
 use Exception;
-use Funique\Model\Directory;
-use Funique\Model\File;
+use Outsanity\Funique\Model\Directory;
+use Outsanity\Funique\Model\File;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**

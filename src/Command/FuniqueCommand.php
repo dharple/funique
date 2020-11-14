@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Funique\Command;
+namespace Outsanity\Funique\Command;
 
-use Funique\Model\Directory;
-use Funique\Service\DirectoryService;
-use Funique\Service\FileService;
+use Outsanity\Funique\Model\Directory;
+use Outsanity\Funique\Service\DirectoryService;
+use Outsanity\Funique\Service\FileService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Command\HelpCommand;
 use Symfony\Component\Console\Input\InputInterface;
