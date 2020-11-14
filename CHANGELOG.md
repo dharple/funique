@@ -1,7 +1,8 @@
 # [Unreleased]
 ## Fixed
+- Fixed fatal error encountered when a file could not be stat'd.
 - Fixed installation instructions and process.
-- Fixed Fatal error encountered when a file could not be stat'd.
+- Fixed problem loading relative paths from inside of the Phar archive.
 - Fixed shebang showing during phar run.
 
 # [0.2.0] - 2020-11-13

@@ -11,6 +11,7 @@
 
 namespace Outsanity\Funique\Command;
 
+use Outsanity\Funique\Model\BaseDirectory;
 use Outsanity\Funique\Model\Directory;
 use Outsanity\Funique\Service\DirectoryService;
 use Outsanity\Funique\Service\FileService;
@@ -130,7 +131,12 @@ class FuniqueCommand extends Command
                     $io->text(sprintf('loading %s-hand side directory: %s', $side, $path));
                 }
 
-                $dir = new Directory($path);
+                $parent = null;
+                if (!preg_match('@^/@', $path)) {
+                    $parent = new BaseDirectory(getcwd());
+                }
+
+                $dir = new Directory($path, $parent);
                 $dirFiles = $this->directoryService->loadDirectory($dir, $this->groupingDivisor, $debugIo);
                 foreach ($dirFiles as $sizeGroup => $contents) {
                     if (array_key_exists($sizeGroup, $files[$side])) {

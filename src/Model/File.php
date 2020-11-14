@@ -153,6 +153,16 @@ class File extends Entry
     }
 
     /**
+     * Returns the relative path of this file.
+     *
+     * @return string
+     */
+    public function getRelativePath(): string
+    {
+        return (isset($this->dir) && !($this->dir instanceof BaseDirectory)) ? $this->dir->getRelativePath() . '/' . $this->file : $this->file;
+    }
+
+    /**
      * Returns the file size
      *
      * @return int

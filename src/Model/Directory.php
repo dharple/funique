@@ -107,4 +107,14 @@ class Directory extends Entry
     {
         return isset($this->parent) ? $this->parent->getPath() . '/' . $this->path : $this->path;
     }
+
+    /**
+     * Returns the relative path of this directory.
+     *
+     * @return string
+     */
+    public function getRelativePath(): string
+    {
+        return (isset($this->parent) && !($this->parent instanceof BaseDirectory)) ? $this->parent->getRelativePath() . '/' . $this->path : $this->path;
+    }
 }

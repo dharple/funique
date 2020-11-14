@@ -23,7 +23,7 @@ abstract class Entry
      */
     public function __toString(): string
     {
-        return $this->getPath();
+        return $this->getRelativePath();
     }
 
     /**
@@ -32,4 +32,11 @@ abstract class Entry
      * @return string
      */
     abstract public function getPath(): string;
+
+    /**
+     * Returns the relative path to this entry.
+     *
+     * @return string
+     */
+    abstract public function getRelativePath(): string;
 }
