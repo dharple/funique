@@ -1,6 +1,6 @@
 <?php
 
-namespace Outsanity\Test\Funique\Model;
+namespace Outsanity\Tests\Funique\Model;
 
 use Exception;
 use Outsanity\Funique\Model\Directory;

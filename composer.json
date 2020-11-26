@@ -26,6 +26,11 @@
             "Outsanity\\Funique\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Outsanity\\Funique\\Tests\\": "tests/"
+        }
+    },
     "scripts": {
         "compile": "bin/compile",
         "phpcbf":  "phpcbf",
