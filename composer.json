@@ -10,15 +10,19 @@
         }
     ],
     "require": {
-        "php": ">=7.2",
+        "php": ">=7.2.5",
         "symfony/console": "^5.1"
     },
     "require-dev": {
         "outsanity/phpcs": "*",
-        "phpstan/phpstan": "^0.12.48",
+        "phpstan/phpstan": "^0.12.57",
         "phpunit/phpunit": "^9.4"
     },
     "config": {
+        "optimize-autoloader": true,
+        "preferred-install": {
+            "*": "dist"
+        },
         "sort-packages": true
     },
     "autoload": {
