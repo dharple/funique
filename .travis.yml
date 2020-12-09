@@ -1,0 +1,31 @@
+#
+# Goal:
+# * Test currently supported and recently sunsetted versions of both
+#   Symfony and PHP.
+# * Test future releases of both.
+#
+
+language: php
+php:
+  - 7.2
+  - 7.3
+  - 7.4
+  - 8.0
+  - nightly
+
+allow_failures:
+  - php: nightly
+
+before_script:
+
+script:
+  - composer install --dev -o
+  - composer phpcs
+  - composer phpstan
+  - composer test
+  - composer install --no-dev -o
+  - bin/compile
+
+cache:
+  directories:
+  - $HOME/.composer/cache/files

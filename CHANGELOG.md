@@ -1,3 +1,10 @@
+# [Unreleased]
+## Changed
+- Add Box configuration.
+- Add Travis configuration.
+- Add composer.lock back in to source control.
+- Updated installation instructions.
+
 # [0.2.1] - 2020-11-14
 ## Fixed
 - Fixed fatal error encountered when a file could not be stat'd.

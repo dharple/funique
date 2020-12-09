@@ -1,5 +1,4 @@
 ###> normal development ###
-*.lock
 *.orig
 *.patch
 *.rej
