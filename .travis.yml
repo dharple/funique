@@ -20,7 +20,6 @@ before_script:
 
 script:
   - composer install --dev -o
-  - composer phpcs
   - composer phpstan
   - composer test
   - composer install --no-dev -o
