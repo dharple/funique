@@ -23,7 +23,7 @@ script:
   - composer phpstan
   - composer test
   - composer install --no-dev -o
-  - bin/compile
+  - php -d phar.readonly=0 bin/compile
 
 cache:
   directories:
