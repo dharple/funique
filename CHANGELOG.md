@@ -5,6 +5,10 @@
 - Add composer.lock back in to source control.
 - Updated installation instructions.
 
+## Fixed
+- Changed interpreter for CLI scripts to use `/usr/bin/env php` instead of
+  `/usr/bin/php` to allow it to work on Travis.
+
 # [0.2.1] - 2020-11-14
 ## Fixed
 - Fixed fatal error encountered when a file could not be stat'd.

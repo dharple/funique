@@ -19,7 +19,7 @@ allow_failures:
 before_script:
 
 script:
-  - composer install --dev -o
+  - composer install
   - composer phpstan
   - composer test
   - composer install --no-dev -o

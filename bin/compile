@@ -1,4 +1,4 @@
-#!/usr/bin/php -d phar.readonly=0
+#!/usr/bin/env -S php -d phar.readonly=0
 <?php
 
 /**
