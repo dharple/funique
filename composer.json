@@ -16,7 +16,7 @@
     "require-dev": {
         "outsanity/phpcs": "*",
         "phpstan/phpstan": "^0.12.57",
-        "phpunit/phpunit": "^9.4"
+        "phpunit/phpunit": "^8.5"
     },
     "config": {
         "optimize-autoloader": true,

@@ -6,4 +6,5 @@
 /dist/
 /vendor/
 composer-ci.json
+phpcs.xml
 phpunit.xml

@@ -72,4 +72,4 @@ using [box].
 
 [backintime]: https://github.com/bit-team/backintime
 [box]: https://github.com/box-project/box
-[rsnapshot]: https://rsnapshot.org/
+[rsnapshot]: https://github.com/rsnapshot/rsnapshot
