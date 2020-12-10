@@ -16,6 +16,9 @@ php:
   - nightly
 
 before_script:
+  - sudo apt-get update
+  - sudo apt-get -y install xmlstarlet
+  - xmlstarlet ed -d phpunit/coverage phpunit.xml.dist > phpunit.xml
   - jq 'del(."require-dev")' composer.json > composer-ci.json
   - COMPOSER=composer-ci.json composer require --dev phpunit/phpunit
 
