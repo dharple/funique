@@ -17,14 +17,15 @@ allow_failures:
   - php: nightly
 
 before_script:
+  - jq 'del(."require-dev")' composer.json > composer-ci.json
+  - COMPOSER=composer-ci.json composer require --dev phpunit/phpunit
 
 script:
   - composer install
-  - composer phpstan
   - composer test
   - composer install --no-dev -o
   - php -d phar.readonly=0 bin/compile
 
 cache:
   directories:
-  - $HOME/.composer/cache/files
+  - $HOME/.cache/composer/files
