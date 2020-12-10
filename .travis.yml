@@ -6,6 +6,8 @@
 #
 
 language: php
+dist: xenial
+os: linux
 php:
   - 7.2
   - 7.3
@@ -13,16 +15,13 @@ php:
   - 8.0
   - nightly
 
-allow_failures:
-  - php: nightly
-
 before_script:
   - jq 'del(."require-dev")' composer.json > composer-ci.json
   - COMPOSER=composer-ci.json composer require --dev phpunit/phpunit
 
 script:
-  - composer install
-  - composer test
+  - COMPOSER=composer-ci.json composer install
+  - vendor/bin/phpunit
   - composer install --no-dev -o
   - php -d phar.readonly=0 bin/compile
 
