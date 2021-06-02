@@ -4,6 +4,8 @@
 - Add Travis configuration.
 - Add composer.lock back in to source control.
 - Updated installation instructions.
+- Updated 3rd party dependencies.
+  - Upgraded Symfony to a minimum of 5.2.
 
 ## Fixed
 - Changed interpreter for CLI scripts to use `/usr/bin/env php` instead of
