@@ -22,7 +22,7 @@ class Directory extends Entry
     /**
      * The parent directory
      *
-     * @var Directory
+     * @var ?Directory
      */
     protected $parent;
 

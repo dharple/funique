@@ -163,7 +163,7 @@ class File extends Entry
      */
     public function getRelativePath(): string
     {
-        return (isset($this->dir) && !($this->dir instanceof BaseDirectory)) ? $this->dir->getRelativePath() . '/' . $this->file : $this->file;
+        return (!($this->dir instanceof BaseDirectory)) ? $this->dir->getRelativePath() . '/' . $this->file : $this->file;
     }
 
     /**
