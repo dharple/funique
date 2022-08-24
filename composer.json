@@ -10,7 +10,7 @@
         }
     ],
     "require": {
-        "php": ">=7.2.5",
+        "php": ">=7.4.3",
         "symfony/console": "^5.2"
     },
     "require-dev": {
@@ -20,6 +20,9 @@
     },
     "config": {
         "optimize-autoloader": true,
+        "platform": {
+            "php": "7.4.3"
+        },
         "preferred-install": {
             "*": "dist"
         },

@@ -5,7 +5,8 @@
 - Add composer.lock back in to source control.
 - Updated installation instructions.
 - Updated 3rd party dependencies.
-  - Upgraded Symfony to a minimum of 5.2.
+  - Upgraded PHP to a minimum of 7.4.
+  - Upgraded Symfony to a minimum of 5.4.
 
 ## Fixed
 - Changed interpreter for CLI scripts to use `/usr/bin/env php` instead of
