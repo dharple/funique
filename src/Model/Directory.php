@@ -41,7 +41,7 @@ class Directory extends Entry
      */
     public function __construct(string $path, ?Directory $parent = null)
     {
-        $this->path = str_replace('~', getenv('HOME'), preg_replace('@/$@', '', $path));
+        $this->path = $path;
         $this->parent = $parent;
     }
 

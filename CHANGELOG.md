@@ -11,6 +11,7 @@
 ## Fixed
 - Changed interpreter for CLI scripts to use `/usr/bin/env php` instead of
   `/usr/bin/php` to allow it to work on Travis.
+- Directories that contain `~` in the name no longer get replaced with `$HOME`.
 
 # [0.2.1] - 2020-11-14
 ## Fixed

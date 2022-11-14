@@ -16,4 +16,17 @@ namespace Outsanity\Funique\Model;
  */
 class BaseDirectory extends Directory
 {
+    /**
+     * Constructs a new directory
+     *
+     * @param string     $path   The path of this directory, relative to the parent.
+     * @param ?Directory $parent The parent directory.
+     */
+    public function __construct(string $path, ?Directory $parent = null)
+    {
+        parent::__construct($path, $parent);
+
+        $this->path = str_replace('~', getenv('HOME'), preg_replace('@/$@', '', $path));
+    }
+
 }
