@@ -12,6 +12,7 @@
 namespace Outsanity\Funique\Service;
 
 use Outsanity\Funique\Model\File;
+use Outsanity\Funique\Model\Summable;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
@@ -22,25 +23,32 @@ class FileService
     /**
      * Determines whether or not two files are the same.
      *
-     * @param File         $fileLeft  The left hand file.
-     * @param File         $fileRight The right hand file.
-     * @param SymfonyStyle $debugIo   A CLI styling interface.
+     * @param Summable     $fileLeft          The left hand file.
+     * @param Summable     $fileRight         The right hand file.
+     * @param string       $checksumAlgorithm The checksum algorithm to use.
+     * @param SymfonyStyle $debugIo           A CLI styling interface.
      *
      * @return bool
      */
-    public function sameFile(File $fileLeft, File $fileRight, SymfonyStyle $debugIo): bool
+    public function sameFile(Summable $fileLeft, Summable $fileRight, string $checksumAlgorithm, SymfonyStyle $debugIo): bool
     {
-        if ($fileLeft->isHardlinkOf($fileRight)) {
-            $debugIo->text(sprintf('comparing left: %s', $fileLeft));
-            $debugIo->text(sprintf('against right:  %s', $fileRight));
-            $debugIo->text('device and inode match');
-            return true;
+        if (($fileLeft instanceOf File) and ($fileRight instanceOf File)) {
+            if ($fileLeft->isHardlinkOf($fileRight)) {
+                $debugIo->text(sprintf('comparing left: %s', $fileLeft));
+                $debugIo->text(sprintf('against right:  %s', $fileRight));
+                $debugIo->text('device and inode match');
+                return true;
+            }
         }
 
-        if ($fileLeft->isSameAs($fileRight)) {
+        if ($fileLeft->isSameAs($fileRight, $checksumAlgorithm)) {
             $debugIo->text(sprintf('comparing left: %s', $fileLeft));
             $debugIo->text(sprintf('against right:  %s', $fileRight));
-            $debugIo->text('size and checksum match');
+            if (($fileLeft instanceOf PhysicalFile) and ($fileRight instanceOf PhysicalFile)) {
+                $debugIo->text('size and checksums match');
+            } else {
+                $debugIo->text('checksums match');
+            }
             return true;
         }
 

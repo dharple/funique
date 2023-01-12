@@ -13,6 +13,7 @@ namespace Outsanity\Funique\Command;
 
 use Exception;
 use Outsanity\Funique\Model\BaseDirectory;
+use Outsanity\Funique\Model\ChecksumEntry;
 use Outsanity\Funique\Model\Directory;
 use Outsanity\Funique\Service\DirectoryService;
 use Outsanity\Funique\Service\FileService;
@@ -29,6 +30,10 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  */
 class FuniqueCommand extends Command
 {
+    /**
+     *
+     */
+
     /**
      * The directory service.
      *
@@ -78,10 +83,14 @@ class FuniqueCommand extends Command
     {
         $this
             ->setName('funique')
-            ->setDescription('compares two sets of directories and reports files unique to one or the other')
+            ->setDescription('compares two sets of directories and/or checksum files, and reports files unique to one or the other')
+            ->addOption('checksum', null, InputOption::VALUE_REQUIRED, 'the checksum algorithm to use', 'sha512')
+            ->addOption('left-checksum-file', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'the left-hand checksum file(s)', [])
             ->addOption('left', 'l', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'the left-hand directory or directories', [])
+            ->addOption('output', 'o', InputOption::VALUE_REQUIRED, 'redirect output to file', '')
+            ->addOption('right-checksum-file', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'the right-hand checksum file(s)', [])
             ->addOption('right', 'r', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'the right-hand directory or directories', [])
-            ->addOption('output', 'o', InputOption::VALUE_REQUIRED, 'redirect output to file', '');
+        ;
     }
 
     /**
@@ -102,7 +111,7 @@ class FuniqueCommand extends Command
         $sides = ['left', 'right'];
 
         foreach ($sides as $side) {
-            if (count($input->getOption($side)) == 0) {
+            if (count($input->getOption($side)) == 0 && count($input->getOption(sprintf('%s-checksum-file', $side))) == 0) {
                 $io->error(sprintf('please specify at least one %s-hand directory to review', $side));
                 $help = new HelpCommand();
                 $help->setCommand($this);
@@ -122,12 +131,21 @@ class FuniqueCommand extends Command
             $io->text(sprintf('redirecting output to %s', $outputFile));
         }
 
+        $checksumAlgorithm = $input->getOption('checksum');
+        if (!in_array($checksumAlgorithm, hash_algos())) {
+            $io->error(sprintf('unable to use algorithm %s for calculating checksums', $checksumAlgorithm));
+            return Command::FAILURE;
+        }
+
         $files = [];
         $sizeGroups = [];
         $leftHandCount = 0;
 
+        $checksumFiles = [];
+
         foreach ($sides as $side) {
             $files[$side] = [];
+            $checksumFiles[$side] = [];
 
             foreach ($input->getOption($side) as $path) {
                 if ($output->isVerbose()) {
@@ -154,6 +172,22 @@ class FuniqueCommand extends Command
                 }
             }
 
+            foreach ($input->getOption(sprintf('%s-checksum-file', $side)) as $checksumFile) {
+                if ($output->isVerbose()) {
+                    $io->text(sprintf('loading %s-hand side checksum file: %s', $side, $checksumFile));
+                }
+
+                foreach (file($checksumFile) as $line) {
+                    list($checksum, $file) = explode(' ', $line, 2);
+
+                    $checksumFiles[$side][] = new ChecksumEntry(trim($checksum), trim($file));
+
+                    if ($side == 'left') {
+                        $leftHandCount++;
+                    }
+                }
+            }
+
             $sizeGroups = array_merge($sizeGroups, array_keys($files[$side]));
         }
 
@@ -171,6 +205,14 @@ class FuniqueCommand extends Command
         foreach ($sizeGroups as $sizeGroup) {
             $filesLeft = array_key_exists($sizeGroup, $files['left']) ? $files['left'][$sizeGroup] : [];
             $filesRight = array_key_exists($sizeGroup, $files['right']) ? $files['right'][$sizeGroup] : [];
+
+            if (count($checksumFiles['left']) > 0) {
+                $filesLeft = array_merge($filesLeft, $checksumFiles['left']);
+            }
+
+            if (count($checksumFiles['right']) > 0) {
+                $filesRight = array_merge($filesRight, $checksumFiles['right']);
+            }
 
             if (empty($filesLeft) || empty($filesRight)) {
                 continue;
@@ -190,7 +232,7 @@ class FuniqueCommand extends Command
                         continue;
                     }
 
-                    if ($this->fileService->sameFile($fileLeft, $fileRight, $debugIo)) {
+                    if ($this->fileService->sameFile($fileLeft, $fileRight, $checksumAlgorithm, $debugIo)) {
                         $fileLeft->isUnique(false);
                         $fileRight->isUnique(false);
                     }
@@ -223,6 +265,14 @@ class FuniqueCommand extends Command
             foreach ($filesRight as $fileRight) {
                 if ($fileRight->isUnique()) {
                     fprintf($outputHandle, "%s\n", $fileRight);
+                }
+            }
+        }
+
+        foreach ($checksumFiles as $side => $files) {
+            foreach ($files as $file) {
+                if ($file->isUnique()) {
+                    fprintf($outputHandle, "%s\n", $file);
                 }
             }
         }

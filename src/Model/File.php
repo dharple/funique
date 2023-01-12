@@ -16,12 +16,25 @@ use Exception;
 /**
  * Describes a file
  */
-class File extends Entry
+class File extends Summable
 {
-    protected const FULL_CHECKSUM_ALGORITHM = 'sha512';
     protected const LEADING_CHECKSUM_ALGORITHM = 'adler32';
     protected const LEADING_CHECKSUM_MINIMUM_FILESIZE = 128 * 1024;
     protected const LEADING_CHECKSUM_SIZE = 2 * 1024;
+
+    /**
+     * A checksum for the file.
+     *
+     * @var string
+     */
+    protected $checksum = null;
+
+    /**
+     * The algorithm used to calculate the currently stored checksum.
+     *
+     * @var string
+     */
+    protected $checksumAlgorithm = null;
 
     /**
      * Cached device information
@@ -52,13 +65,6 @@ class File extends Entry
     protected $inode = null;
 
     /**
-     * Whether or not this file is unique.
-     *
-     * @var boolean
-     */
-    protected $isUnique = true;
-
-    /**
      * A checksum calculated based on the initial few bytes of the file.
      *
      * @var string
@@ -71,13 +77,6 @@ class File extends Entry
      * @var int
      */
     protected $size = null;
-
-    /**
-     * A checksum for the file.
-     *
-     * @var string
-     */
-    protected $sum = null;
 
     /**
      * Constructs a new File
@@ -185,15 +184,19 @@ class File extends Entry
     /**
      * Returns the checksum for the entire file.
      *
+     * @param string $checksumAlgorithm The algorithm to use.
+     *
      * @return string
      */
-    public function getSum(): string
+    public function getSum(string $checksumAlgorithm): string
     {
-        if ($this->sum !== null) {
-            return $this->sum;
+        if ($this->checksum !== null && $this->checksumAlgorithm === $checksumAlgorithm) {
+            return $this->checksum;
         }
 
-        return $this->sum = hash_file(static::FULL_CHECKSUM_ALGORITHM, $this->getPath());
+        $this->checksumAlgorithm = $checksumAlgorithm;
+
+        return $this->checksum = hash_file($checksumAlgorithm, $this->getPath());
     }
 
     /**
@@ -208,47 +211,6 @@ class File extends Entry
     public function isHardlinkOf(File $other): bool
     {
         return ($this->getInode() == $other->getInode() && $this->getDevice() == $other->getDevice());
-    }
-
-    /**
-     * Determines whether or not this file has the same contents as another
-     * file.
-     *
-     * @param File $other The other file to review.
-     *
-     * @return bool
-     *
-     * @throws Exception
-     */
-    public function isSameAs(File $other): bool
-    {
-        if ($this->getSize() != $other->getSize()) {
-            return false;
-        }
-
-        if ($this->getSize() > static::LEADING_CHECKSUM_MINIMUM_FILESIZE) {
-            if ($this->getLeadingSum() != $other->getLeadingSum()) {
-                return false;
-            }
-        }
-
-        return ($this->getSum() == $other->getSum());
-    }
-
-    /**
-     * Whether or not the file is unique.  Defaults to true.
-     *
-     * @param ?bool $isUnique Pass to set, leave off to return.
-     *
-     * @return bool
-     */
-    public function isUnique(?bool $isUnique = null): bool
-    {
-        if ($isUnique === null) {
-            return $this->isUnique;
-        }
-
-        return $this->isUnique = $isUnique;
     }
 
     /**
