@@ -1,4 +1,8 @@
 # [Unreleased]
+## Added
+- Added support for considering a list of checksums as being on one side or the
+  other.
+
 ## Changed
 - Add Box configuration.
 - Add Travis configuration.
