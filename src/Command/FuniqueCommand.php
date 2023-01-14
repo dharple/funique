@@ -15,6 +15,7 @@ use Exception;
 use Outsanity\Funique\Model\BaseDirectory;
 use Outsanity\Funique\Model\ChecksumEntry;
 use Outsanity\Funique\Model\Directory;
+use Outsanity\Funique\Model\File;
 use Outsanity\Funique\Service\DirectoryService;
 use Outsanity\Funique\Service\FileService;
 use Symfony\Component\Console\Command\Command;
@@ -172,6 +173,8 @@ class FuniqueCommand extends Command
                 }
             }
 
+            // handle checksum files
+
             foreach ($input->getOption(sprintf('%s-checksum-file', $side)) as $checksumFile) {
                 if ($output->isVerbose()) {
                     $io->text(sprintf('loading %s-hand side checksum file: %s', $side, $checksumFile));
@@ -181,10 +184,6 @@ class FuniqueCommand extends Command
                     list($checksum, $file) = explode(' ', $line, 2);
 
                     $checksumFiles[$side][] = new ChecksumEntry(trim($checksum), trim($file));
-
-                    if ($side == 'left') {
-                        $leftHandCount++;
-                    }
                 }
             }
 
@@ -238,7 +237,7 @@ class FuniqueCommand extends Command
                     }
                 }
 
-                if ($output->isVerbose() && !$output->isDebug()) {
+                if ($output->isVerbose() && !$output->isDebug() && ($fileLeft instanceOf File)) {
                     $io->progressAdvance();
                 }
 
