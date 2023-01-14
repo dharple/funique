@@ -1,4 +1,4 @@
-# [Unreleased]
+# [0.3.0] - 2023-01-14
 ## Added
 - Added support for considering a list of checksums as being on one side or the
   other.
