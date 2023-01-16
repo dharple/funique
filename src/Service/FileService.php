@@ -30,26 +30,40 @@ class FileService
      *
      * @return bool
      */
-    public function sameFile(Summable $fileLeft, Summable $fileRight, string $checksumAlgorithm, SymfonyStyle $debugIo): bool
+    public function checkContents(Summable $fileLeft, Summable $fileRight, string $checksumAlgorithm, SymfonyStyle $debugIo): bool
     {
-        if (($fileLeft instanceOf File) and ($fileRight instanceOf File)) {
-            if ($fileLeft->isHardlinkOf($fileRight)) {
-                $debugIo->text(sprintf('comparing left: %s', $fileLeft));
-                $debugIo->text(sprintf('against right:  %s', $fileRight));
-                $debugIo->text('device and inode match');
-                return true;
-            }
-        }
-
         if ($fileLeft->isSameAs($fileRight, $checksumAlgorithm)) {
             $debugIo->text(sprintf('comparing left: %s', $fileLeft));
-            $debugIo->text(sprintf('against right:  %s', $fileRight));
+            $debugIo->text(sprintf(' against right: %s', $fileRight));
             if (($fileLeft instanceOf PhysicalFile) and ($fileRight instanceOf PhysicalFile)) {
                 $debugIo->text('size and checksums match');
             } else {
                 $debugIo->text('checksums match');
             }
             return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Determines whether or not two files are hardlinks of each other.
+     *
+     * @param Summable     $fileLeft          The left hand file.
+     * @param Summable     $fileRight         The right hand file.
+     * @param SymfonyStyle $debugIo           A CLI styling interface.
+     *
+     * @return bool
+     */
+    public function checkHardlink(Summable $fileLeft, Summable $fileRight, SymfonyStyle $debugIo): bool
+    {
+        if (($fileLeft instanceOf File) and ($fileRight instanceOf File)) {
+            if ($fileLeft->isHardlinkOf($fileRight)) {
+                $debugIo->text(sprintf('comparing left: %s', $fileLeft));
+                $debugIo->text(sprintf(' against right: %s', $fileRight));
+                $debugIo->text('device and inode match');
+                return true;
+            }
         }
 
         return false;

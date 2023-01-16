@@ -1,3 +1,16 @@
+# [unreleased]
+## Added
+- When viewing debug output, a line will show how many unique files and
+  checksums exist on both sides.
+
+## Changed
+- The main review loop looks for hardlinks first, then compares sizes and
+  checksums when at least one non-unique pair exists.
+- The output now includes 'L:' and 'R:' to distinguish sides.
+
+## Fixed
+- When viewing debug output, the size groups are now shown correctly.
+
 # [0.3.0] - 2023-01-14
 ## Added
 - Added support for considering a list of checksums as being on one side or the

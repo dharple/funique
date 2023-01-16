@@ -219,11 +219,13 @@ class FuniqueCommand extends Command
 
             $debugIo->text(sprintf(
                 'reviewing files between %d and %d bytes',
-                (($sizeGroup - 1) * $this->groupingDivisor),
-                ($sizeGroup * $this->groupingDivisor)
+                ($sizeGroup * $this->groupingDivisor),
+                (($sizeGroup + 1)* $this->groupingDivisor)
             ));
 
             $iterationCount = 0;
+
+            // check hardlinks first
 
             foreach ($filesLeft as $fileLeft) {
                 foreach ($filesRight as $fileRight) {
@@ -231,18 +233,75 @@ class FuniqueCommand extends Command
                         continue;
                     }
 
-                    if ($this->fileService->sameFile($fileLeft, $fileRight, $checksumAlgorithm, $debugIo)) {
+                    if ($this->fileService->checkHardlink($fileLeft, $fileRight, $debugIo)) {
                         $fileLeft->isUnique(false);
                         $fileRight->isUnique(false);
                     }
+                }
+            }
+
+            // then review size and checksums
+
+            if ($output->isDebug()) {
+                $fileLeftUnique = 0;
+                $fileRightUnique = 0;
+                $checksumLeftUnique = 0;
+                $checksumRightUnique = 0;
+
+                foreach ($filesLeft as $fileLeft) {
+                    if ($fileLeft->isUnique()) {
+                        if ($fileLeft instanceOf File) {
+                            $fileLeftUnique++;
+                        } else {
+                            $checksumLeftUnique++;
+                        }
+                    }
+                }
+
+                foreach ($filesRight as $fileRight) {
+                    if ($fileRight->isUnique()) {
+                        if ($fileRight instanceOf File) {
+                            $fileRightUnique++;
+                        } else {
+                            $checksumRightUnique++;
+                        }
+                    }
+                }
+
+                $debugIo->text(sprintf(
+                    'Starting a checksum review of %s left files vs %s right files, and %s left checksums vs %s right checksums',
+                    $fileLeftUnique,
+                    $fileRightUnique,
+                    $checksumLeftUnique,
+                    $checksumRightUnique
+                ));
+
+            }
+
+            foreach ($filesLeft as $fileLeft) {
+                $checkedContents = false;
+
+                foreach ($filesRight as $fileRight) {
+                    if ($fileLeft->isUnique() === false && $fileRight->isUnique() === false) {
+                        continue;
+                    }
+
+                    if ($this->fileService->checkContents($fileLeft, $fileRight, $checksumAlgorithm, $debugIo)) {
+                        $fileLeft->isUnique(false);
+                        $fileRight->isUnique(false);
+                    }
+
+                    $checkedContents = true;
                 }
 
                 if ($output->isVerbose() && !$output->isDebug() && ($fileLeft instanceOf File)) {
                     $io->progressAdvance();
                 }
 
-                if (++$iterationCount % 10 == 0) {
-                    usleep($this->sleepTime);
+                if ($checkedContents) {
+                    if (++$iterationCount % 10 == 0) {
+                        usleep($this->sleepTime);
+                    }
                 }
             }
         }
@@ -257,21 +316,22 @@ class FuniqueCommand extends Command
 
             foreach ($filesLeft as $fileLeft) {
                 if ($fileLeft->isUnique()) {
-                    fprintf($outputHandle, "%s\n", $fileLeft);
+                    fprintf($outputHandle, "L: %s\n", $fileLeft);
                 }
             }
 
             foreach ($filesRight as $fileRight) {
                 if ($fileRight->isUnique()) {
-                    fprintf($outputHandle, "%s\n", $fileRight);
+                    fprintf($outputHandle, "R: %s\n", $fileRight);
                 }
             }
         }
 
         foreach ($checksumFiles as $side => $files) {
+            $sideLabel = strtoupper(substr($side, 0, 1));
             foreach ($files as $file) {
                 if ($file->isUnique()) {
-                    fprintf($outputHandle, "%s\n", $file);
+                    fprintf($outputHandle, "%s: %s\n", $sideLabel, $file);
                 }
             }
         }
