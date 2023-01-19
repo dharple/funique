@@ -18,7 +18,6 @@ use Exception;
  */
 class Directory extends Entry
 {
-
     /**
      * The parent directory
      *

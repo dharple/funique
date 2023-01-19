@@ -28,6 +28,8 @@ abstract class Summable extends Entry
     /**
      * Returns the checksum for the entire file.
      *
+     * @param string $checksumAlgorithm The algorithm to use.
+     *
      * @return string
      */
     abstract public function getSum(string $checksumAlgorithm): string;
@@ -45,7 +47,7 @@ abstract class Summable extends Entry
      */
     public function isSameAs(Summable $other, string $checksumAlgorithm): bool
     {
-        if (($this instanceOf File) && ($other instanceOf File)) {
+        if (($this instanceof File) && ($other instanceof File)) {
             if ($this->getSize() != $other->getSize()) {
                 return false;
             }

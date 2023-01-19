@@ -35,7 +35,7 @@ class FileService
         if ($fileLeft->isSameAs($fileRight, $checksumAlgorithm)) {
             $debugIo->text(sprintf('comparing left: %s', $fileLeft));
             $debugIo->text(sprintf(' against right: %s', $fileRight));
-            if (($fileLeft instanceOf PhysicalFile) and ($fileRight instanceOf PhysicalFile)) {
+            if (($fileLeft instanceof File) and ($fileRight instanceof File)) {
                 $debugIo->text('size and checksums match');
             } else {
                 $debugIo->text('checksums match');
@@ -49,15 +49,15 @@ class FileService
     /**
      * Determines whether or not two files are hardlinks of each other.
      *
-     * @param Summable     $fileLeft          The left hand file.
-     * @param Summable     $fileRight         The right hand file.
-     * @param SymfonyStyle $debugIo           A CLI styling interface.
+     * @param Summable     $fileLeft  The left hand file.
+     * @param Summable     $fileRight The right hand file.
+     * @param SymfonyStyle $debugIo   A CLI styling interface.
      *
      * @return bool
      */
     public function checkHardlink(Summable $fileLeft, Summable $fileRight, SymfonyStyle $debugIo): bool
     {
-        if (($fileLeft instanceOf File) and ($fileRight instanceOf File)) {
+        if (($fileLeft instanceof File) and ($fileRight instanceof File)) {
             if ($fileLeft->isHardlinkOf($fileRight)) {
                 $debugIo->text(sprintf('comparing left: %s', $fileLeft));
                 $debugIo->text(sprintf(' against right: %s', $fileRight));

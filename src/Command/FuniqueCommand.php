@@ -32,10 +32,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class FuniqueCommand extends Command
 {
     /**
-     *
-     */
-
-    /**
      * The directory service.
      *
      * @var DirectoryService
@@ -220,7 +216,7 @@ class FuniqueCommand extends Command
             $debugIo->text(sprintf(
                 'reviewing files between %d and %d bytes',
                 ($sizeGroup * $this->groupingDivisor),
-                (($sizeGroup + 1)* $this->groupingDivisor)
+                (($sizeGroup + 1) * $this->groupingDivisor)
             ));
 
             $iterationCount = 0;
@@ -250,7 +246,7 @@ class FuniqueCommand extends Command
 
                 foreach ($filesLeft as $fileLeft) {
                     if ($fileLeft->isUnique()) {
-                        if ($fileLeft instanceOf File) {
+                        if ($fileLeft instanceof File) {
                             $fileLeftUnique++;
                         } else {
                             $checksumLeftUnique++;
@@ -260,7 +256,7 @@ class FuniqueCommand extends Command
 
                 foreach ($filesRight as $fileRight) {
                     if ($fileRight->isUnique()) {
-                        if ($fileRight instanceOf File) {
+                        if ($fileRight instanceof File) {
                             $fileRightUnique++;
                         } else {
                             $checksumRightUnique++;
@@ -275,7 +271,6 @@ class FuniqueCommand extends Command
                     $checksumLeftUnique,
                     $checksumRightUnique
                 ));
-
             }
 
             foreach ($filesLeft as $fileLeft) {
@@ -294,7 +289,7 @@ class FuniqueCommand extends Command
                     $checkedContents = true;
                 }
 
-                if ($output->isVerbose() && !$output->isDebug() && ($fileLeft instanceOf File)) {
+                if ($output->isVerbose() && !$output->isDebug() && ($fileLeft instanceof File)) {
                     $io->progressAdvance();
                 }
 

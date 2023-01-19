@@ -20,13 +20,6 @@ use Exception;
 class ChecksumEntry extends Summable
 {
     /**
-     * The filename for this file
-     *
-     * @var string
-     */
-    protected $file;
-
-    /**
      * A checksum for the file.
      *
      * @var string
@@ -34,10 +27,17 @@ class ChecksumEntry extends Summable
     protected $checksum = null;
 
     /**
+     * The filename for this file
+     *
+     * @var string
+     */
+    protected $file;
+
+    /**
      * Constructs a new File
      *
-     * @param string    $checksum The checksum.
-     * @param string    $file     The filename.
+     * @param string $checksum The checksum.
+     * @param string $file     The filename.
      */
     public function __construct(string $checksum, string $file)
     {

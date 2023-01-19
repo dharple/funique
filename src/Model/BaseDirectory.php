@@ -28,5 +28,4 @@ class BaseDirectory extends Directory
 
         $this->path = str_replace('~', getenv('HOME'), preg_replace('@/$@', '', $path));
     }
-
 }
