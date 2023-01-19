@@ -19,6 +19,14 @@ use Exception;
 abstract class Summable extends Entry
 {
     /**
+     * How large a file needs to be before we will calculate the leading
+     * checksum.
+     *
+     * @var integer
+     */
+    protected const LEADING_CHECKSUM_MINIMUM_FILESIZE = 128 * 1024;
+
+    /**
      * Whether or not this file is unique.
      *
      * @var boolean

@@ -18,8 +18,19 @@ use Exception;
  */
 class File extends Summable
 {
+    /**
+     * What algorithm to use for the leading checksum.
+     *
+     * @var string
+     */
     protected const LEADING_CHECKSUM_ALGORITHM = 'adler32';
-    protected const LEADING_CHECKSUM_MINIMUM_FILESIZE = 128 * 1024;
+
+    /**
+     * How large of a chunk to carve off of the file for a leading checksum
+     * calculation.
+     *
+     * @var integer
+     */
     protected const LEADING_CHECKSUM_SIZE = 2 * 1024;
 
     /**
