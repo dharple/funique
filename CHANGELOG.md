@@ -6,6 +6,7 @@
 ## Changed
 - The main review loop looks for hardlinks first, then compares sizes and
   checksums when at least one non-unique pair exists.
+- The minimum PHP version is now 8.1.
 - The output now includes 'L:' and 'R:' to distinguish sides.
 
 ## Fixed
