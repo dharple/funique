@@ -11,14 +11,14 @@
     ],
     "require": {
         "php": ">=7.4.3",
-        "symfony/console": "^5.4.11"
+        "symfony/console": "^5.4.17"
     },
     "require-dev": {
         "outsanity/phpcs": ">=0.4.0",
-        "phpstan/phpstan": "^1.8.2",
-        "phpunit/phpunit": "^8.5.29",
-        "ramsey/uuid": "^4.2",
-        "symfony/filesystem": "^5.4"
+        "phpstan/phpstan": "^1.9.14",
+        "phpunit/phpunit": "^9.5.28",
+        "ramsey/uuid": "^4.2.3",
+        "symfony/filesystem": "^5.4.13"
     },
     "config": {
         "optimize-autoloader": true,
@@ -44,10 +44,10 @@
         }
     },
     "scripts": {
-        "compile": "bin/compile",
-        "phpcbf":  "phpcbf",
-        "phpcs":   "phpcs",
-        "phpstan": "phpstan analyse",
-        "test":    "phpunit"
+        "compile":  "bin/compile",
+        "phpcbf":   "phpcbf",
+        "phpcs":    "phpcs",
+        "phpstan":  "phpstan analyse",
+        "test":     "phpunit"
     }
 }

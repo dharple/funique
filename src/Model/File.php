@@ -156,7 +156,7 @@ class File extends Summable
             return $this->leadingSum;
         }
 
-        $fp = fopen($this->getPath(), 'rb');
+        $fp = @fopen($this->getPath(), 'rb');
         if ($fp === false) {
             throw new Exception(sprintf('Unable to read %s', $this->getPath()));
         }
@@ -243,10 +243,6 @@ class File extends Summable
      */
     protected function loadStats()
     {
-        if ($this->inode !== null) {
-            return;
-        }
-
         $stat = @stat($this->getPath());
         if ($stat === false) {
             throw new Exception(sprintf('Unable to stat %s', $this->getPath()));

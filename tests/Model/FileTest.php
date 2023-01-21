@@ -86,6 +86,46 @@ class FileTest extends BaseTest
     }
 
     /**
+     * Tests the getDevice() method
+     *
+     * @return void
+     */
+    public function testGetDevice()
+    {
+        $checkFiles = $this->getCheckFiles();
+
+        $this->assertEquals($checkFiles[self::FILE_CORRECT1]->getDevice(), $checkFiles[self::FILE_CORRECT2]->getDevice());
+        $this->assertEquals($checkFiles[self::FILE_CORRECT1]->getDevice(), $checkFiles[self::FILE_WRONG_SIZE]->getDevice());
+        $this->assertEquals($checkFiles[self::FILE_CORRECT1]->getDevice(), $checkFiles[self::FILE_WRONG_DATA]->getDevice());
+    }
+
+    /**
+     * Tests the getInode() method
+     *
+     * @return void
+     */
+    public function testGetInode()
+    {
+        $checkFiles = $this->getCheckFiles();
+
+        $this->assertNotEquals($checkFiles[self::FILE_CORRECT1]->getInode(), $checkFiles[self::FILE_CORRECT2]->getInode());
+        $this->assertNotEquals($checkFiles[self::FILE_CORRECT1]->getInode(), $checkFiles[self::FILE_WRONG_SIZE]->getInode());
+        $this->assertNotEquals($checkFiles[self::FILE_CORRECT1]->getInode(), $checkFiles[self::FILE_WRONG_DATA]->getInode());
+
+        foreach ($checkFiles as $file) {
+            $path = $file->getPath();
+
+            $newPath = sprintf('%s.%s', $path, __METHOD__);
+
+            link($path, $newPath);
+
+            $newFile = new File(basename($newPath), $file->getDirectory());
+
+            $this->assertTrue($file->isHardlinkOf($newFile));
+        }
+    }
+
+    /**
      * Tests the getLeadingSum() method
      *
      * @return void
@@ -100,7 +140,7 @@ class FileTest extends BaseTest
     }
 
     /**
-     * Tests the getSum() method
+     * Tests the getSize() method
      *
      * @return void
      */
@@ -131,11 +171,25 @@ class FileTest extends BaseTest
     }
 
     /**
+     * Confirms the getLeadingSum() method throws an Exception with an invalid file.
+     *
+     * @return void
+     */
+    public function testInvalidFileGetLeadingSum()
+    {
+        $this->expectException(Exception::class);
+
+        $file = new File(Uuid::uuid4(), new Directory(sys_get_temp_dir()));
+
+        $file->getLeadingSum();
+    }
+
+    /**
      * Confirms the getSize() method throws an Exception with an invalid file.
      *
      * @return void
      */
-    public function testInvalidFile()
+    public function testInvalidFileGetSum()
     {
         $this->expectException(Exception::class);
 
@@ -146,8 +200,6 @@ class FileTest extends BaseTest
 
     /**
      * Tests the isHardlinkOf() method
-     *
-     * Ends up being coverage for getDevice() and getInode(), as well.
      *
      * @return void
      */
