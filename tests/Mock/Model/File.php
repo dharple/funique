@@ -36,6 +36,16 @@ class File extends BaseFile
     }
 
     /**
+     * Returns the minimum filesize to enable leading checksum calculations.
+     *
+     * @return integer
+     */
+    public function getLeadingChecksumMinimumFilesize()
+    {
+        return static::LEADING_CHECKSUM_MINIMUM_FILESIZE;
+    }
+
+    /**
      * Returns the leading checksum size.
      *
      * @return integer

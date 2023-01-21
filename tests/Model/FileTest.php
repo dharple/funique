@@ -32,13 +32,20 @@ class FileTest extends BaseTest
     /**
      * Returns an array of File from a (temporary) physical directory
      *
+     * @param bool $largeFiles Set to true to create files large enough to
+     *                         trigger the leading checksum calculation.
+     *
      * @return File[]
      */
-    protected function getCheckFiles(): array
+    protected function getCheckFiles(bool $largeFiles = false): array
     {
         $dir = new MockDirectory('/');
 
-        $minimumSize = (new MockFile('ignore', $dir))->getLeadingChecksumSize();
+        if ($largeFiles) {
+            $minimumSize = (new MockFile('large', $dir))->getLeadingChecksumMinimumFilesize();
+        } else {
+            $minimumSize = (new MockFile('normal', $dir))->getLeadingChecksumSize();
+        }
 
         $unit = 1024;
 
@@ -86,6 +93,39 @@ class FileTest extends BaseTest
     }
 
     /**
+     * Generates a temp filename based on method and algorithm.
+     *
+     * @param string  $path      The base path for this file.
+     * @param string  $method    The method calling this function.
+     * @param ?string $secondary The secondary name to use.
+     *
+     * @return string
+     */
+    public function getTempFilename(string $path, string $method, ?string $secondary = null)
+    {
+        if (str_contains($method, '::')) {
+            $hold = explode('::', $method);
+            $method = $hold[1];
+        }
+
+        $filename = sprintf(
+            '%s.%s',
+            $path,
+            preg_replace('/[^a-z0-9]/i', '-', $method)
+        );
+
+        if ($secondary !== null) {
+            $filename = sprintf(
+                '%s.%s',
+                $filename,
+                preg_replace('/[^a-z0-9]/i', '-', $secondary)
+            );
+        }
+
+        return $filename;
+    }
+
+    /**
      * Tests the getDevice() method
      *
      * @return void
@@ -114,13 +154,11 @@ class FileTest extends BaseTest
 
         foreach ($checkFiles as $file) {
             $path = $file->getPath();
-
-            $newPath = sprintf('%s.%s', $path, __METHOD__);
+            $newPath = $this->getTempFilename($path, __METHOD__);
 
             link($path, $newPath);
 
             $newFile = new File(basename($newPath), $file->getDirectory());
-
             $this->assertTrue($file->isHardlinkOf($newFile));
         }
     }
@@ -162,7 +200,13 @@ class FileTest extends BaseTest
     {
         $checkFiles = $this->getCheckFiles();
 
-        $algorithms = ['sha512', 'sha256', 'sha1', 'md5'];
+        $algorithms = hash_algos();
+
+        // pre-seed cached checksum
+        foreach ($checkFiles as $file) {
+            $checkFiles[self::FILE_CORRECT1]->getSum($algorithms[array_rand($algorithms)]);
+        }
+
         foreach ($algorithms as $algorithm) {
             $this->assertEquals($checkFiles[self::FILE_CORRECT1]->getSum($algorithm), $checkFiles[self::FILE_CORRECT2]->getSum($algorithm));
             $this->assertNotEquals($checkFiles[self::FILE_CORRECT1]->getSum($algorithm), $checkFiles[self::FILE_WRONG_SIZE]->getSum($algorithm));
@@ -207,19 +251,18 @@ class FileTest extends BaseTest
     {
         $checkFiles = $this->getCheckFiles();
 
-        $this->assertFalse($checkFiles[self::FILE_CORRECT1]->isHardLinkOf($checkFiles[self::FILE_CORRECT2]));
-        $this->assertFalse($checkFiles[self::FILE_CORRECT1]->isHardLinkOf($checkFiles[self::FILE_WRONG_SIZE]));
-        $this->assertFalse($checkFiles[self::FILE_CORRECT1]->isHardLinkOf($checkFiles[self::FILE_WRONG_DATA]));
+        $this->assertFalse($checkFiles[self::FILE_CORRECT1]->isHardlinkOf($checkFiles[self::FILE_CORRECT2]));
+        $this->assertFalse($checkFiles[self::FILE_CORRECT1]->isHardlinkOf($checkFiles[self::FILE_WRONG_SIZE]));
+        $this->assertFalse($checkFiles[self::FILE_CORRECT1]->isHardlinkOf($checkFiles[self::FILE_WRONG_DATA]));
 
-        $this->assertFalse($checkFiles[self::FILE_CORRECT2]->isHardLinkOf($checkFiles[self::FILE_WRONG_SIZE]));
-        $this->assertFalse($checkFiles[self::FILE_CORRECT2]->isHardLinkOf($checkFiles[self::FILE_WRONG_DATA]));
+        $this->assertFalse($checkFiles[self::FILE_CORRECT2]->isHardlinkOf($checkFiles[self::FILE_WRONG_SIZE]));
+        $this->assertFalse($checkFiles[self::FILE_CORRECT2]->isHardlinkOf($checkFiles[self::FILE_WRONG_DATA]));
 
-        $this->assertFalse($checkFiles[self::FILE_WRONG_SIZE]->isHardLinkOf($checkFiles[self::FILE_WRONG_DATA]));
+        $this->assertFalse($checkFiles[self::FILE_WRONG_SIZE]->isHardlinkOf($checkFiles[self::FILE_WRONG_DATA]));
 
         foreach ($checkFiles as $file) {
             $path = $file->getPath();
-
-            $newPath = sprintf('%s.%s', $path, __METHOD__);
+            $newPath = $this->getTempFilename($path, __METHOD__);
 
             link($path, $newPath);
 
@@ -227,5 +270,62 @@ class FileTest extends BaseTest
 
             $this->assertTrue($file->isHardlinkOf($newFile));
         }
+    }
+
+    /**
+     * Tests the isSameAs() method
+     *
+     * @return void
+     */
+    public function testIsSameAs()
+    {
+        $checkFiles = $this->getCheckFiles(true);
+
+        $algorithms = hash_algos();
+
+        // pre-seed cached checksum
+        foreach ($checkFiles as $file) {
+            $checkFiles[self::FILE_CORRECT1]->getSum($algorithms[array_rand($algorithms)]);
+        }
+
+        foreach ($algorithms as $algorithm) {
+            $this->assertTrue($checkFiles[self::FILE_CORRECT1]->isSameAs($checkFiles[self::FILE_CORRECT2], $algorithm));
+            $this->assertFalse($checkFiles[self::FILE_CORRECT1]->isSameAs($checkFiles[self::FILE_WRONG_SIZE], $algorithm));
+            $this->assertFalse($checkFiles[self::FILE_CORRECT1]->isSameAs($checkFiles[self::FILE_WRONG_DATA], $algorithm));
+
+            $this->assertFalse($checkFiles[self::FILE_CORRECT2]->isSameAs($checkFiles[self::FILE_WRONG_SIZE], $algorithm));
+            $this->assertFalse($checkFiles[self::FILE_CORRECT2]->isSameAs($checkFiles[self::FILE_WRONG_DATA], $algorithm));
+
+            $this->assertFalse($checkFiles[self::FILE_WRONG_SIZE]->isSameAs($checkFiles[self::FILE_WRONG_DATA], $algorithm));
+
+            foreach ($checkFiles as $file) {
+                $path = $file->getPath();
+                $newPath = $this->getTempFilename($path, __METHOD__, $algorithm);
+
+                link($path, $newPath);
+
+                $newFile = new File(basename($newPath), $file->getDirectory());
+                $this->assertTrue($file->isSameAs($newFile, $algorithm));
+            }
+        }
+    }
+
+    /**
+     * Tests the isUnique() method
+     *
+     * @return void
+     */
+    public function testIsUnique()
+    {
+        $file = new File(Uuid::uuid4(), new Directory(sys_get_temp_dir()));
+
+        $file->isUnique(true);
+        $this->assertTrue($file->isUnique());
+
+        $file->isUnique(false);
+        $this->assertFalse($file->isUnique());
+
+        $file->isUnique(true);
+        $this->assertTrue($file->isUnique());
     }
 }
