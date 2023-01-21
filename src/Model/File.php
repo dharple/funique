@@ -118,6 +118,16 @@ class File extends Summable
     }
 
     /**
+     * Returns the Directory associated with this file.
+     *
+     * @return Directory
+     */
+    public function getDirectory(): Directory
+    {
+        return $this->dir;
+    }
+
+    /**
      * Returns the inode for this file.
      *
      * @return int

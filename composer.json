@@ -16,7 +16,9 @@
     "require-dev": {
         "outsanity/phpcs": ">=0.4.0",
         "phpstan/phpstan": "^1.8.2",
-        "phpunit/phpunit": "^8.5.29"
+        "phpunit/phpunit": "^8.5.29",
+        "ramsey/uuid": "^4.2",
+        "symfony/filesystem": "^5.4"
     },
     "config": {
         "optimize-autoloader": true,
@@ -38,7 +40,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Outsanity\\Funique\\Tests\\": "tests/"
+            "Outsanity\\Tests\\Funique\\": "tests/"
         }
     },
     "scripts": {
