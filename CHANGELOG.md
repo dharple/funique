@@ -1,4 +1,4 @@
-# [unreleased]
+# [0.4.0] - 2023-01-21
 ## Added
 - When viewing debug output, a line will show how many unique files and
   checksums exist on both sides.
