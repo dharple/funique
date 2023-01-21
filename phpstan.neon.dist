@@ -3,3 +3,4 @@ parameters:
 	paths:
 		- phar
 		- src
+		- tests

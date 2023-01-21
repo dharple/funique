@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of the funique test suite.
+ *
+ * (c) Doug Harple <dharple@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Outsanity\Tests\Funique\Model;
 
 use Exception;
@@ -10,20 +19,20 @@ use Outsanity\Tests\Funique\BaseTest;
 use Outsanity\Tests\Funique\Mock\Model\Directory as MockDirectory;
 use Outsanity\Tests\Funique\Mock\Model\File as MockFile;
 
+/**
+ * Tests for the File model.
+ */
 class FileTest extends BaseTest
 {
-
-    const FILE_CORRECT1   = 'same1';
-    const FILE_CORRECT2   = 'same2';
-    const FILE_WRONG_SIZE = 'wrong-size';
-    const FILE_WRONG_DATA = 'wrong-data';
+    protected const FILE_CORRECT1   = 'same1';
+    protected const FILE_CORRECT2   = 'same2';
+    protected const FILE_WRONG_SIZE = 'wrong-size';
+    protected const FILE_WRONG_DATA = 'wrong-data';
 
     /**
      * Returns an array of File from a (temporary) physical directory
      *
      * @return File[]
-     *
-     * @throws Exception
      */
     protected function getCheckFiles(): array
     {
@@ -77,19 +86,9 @@ class FileTest extends BaseTest
     }
 
     /**
-     * Confirms the getSize() method throws an Exception with an invalid file.
-     */
-    public function testInvalidFile()
-    {
-        $this->expectException(Exception::class);
-
-        $file = new File(Uuid::uuid4(), new Directory(sys_get_temp_dir()));
-
-        $file->getSize();
-    }
-
-    /**
      * Tests the getLeadingSum() method
+     *
+     * @return void
      */
     public function testGetLeadingSum()
     {
@@ -102,6 +101,8 @@ class FileTest extends BaseTest
 
     /**
      * Tests the getSum() method
+     *
+     * @return void
      */
     public function testGetSize()
     {
@@ -114,6 +115,8 @@ class FileTest extends BaseTest
 
     /**
      * Tests the getSum() method
+     *
+     * @return void
      */
     public function testGetSum()
     {
@@ -128,9 +131,25 @@ class FileTest extends BaseTest
     }
 
     /**
+     * Confirms the getSize() method throws an Exception with an invalid file.
+     *
+     * @return void
+     */
+    public function testInvalidFile()
+    {
+        $this->expectException(Exception::class);
+
+        $file = new File(Uuid::uuid4(), new Directory(sys_get_temp_dir()));
+
+        $file->getSize();
+    }
+
+    /**
      * Tests the isHardlinkOf() method
      *
      * Ends up being coverage for getDevice() and getInode(), as well.
+     *
+     * @return void
      */
     public function testIsHardlinkOf()
     {
@@ -145,8 +164,7 @@ class FileTest extends BaseTest
 
         $this->assertFalse($checkFiles[self::FILE_WRONG_SIZE]->isHardLinkOf($checkFiles[self::FILE_WRONG_DATA]));
 
-        foreach ($checkFiles as $file)
-        {
+        foreach ($checkFiles as $file) {
             $path = $file->getPath();
 
             $newPath = sprintf('%s.%s', $path, __METHOD__);

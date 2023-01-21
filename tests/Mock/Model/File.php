@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of the funique test suite.
+ *
+ * (c) Doug Harple <dharple@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Outsanity\Tests\Funique\Mock\Model;
 
 use Outsanity\Funique\Model\File as BaseFile;
@@ -11,6 +20,8 @@ class File extends BaseFile
 {
     /**
      * What to fill files with
+     *
+     * @var string
      */
     protected $filler = 'A';
 
@@ -37,7 +48,7 @@ class File extends BaseFile
     /**
      * Sets the string to use to fill in mock files.
      *
-     * @param string $filler
+     * @param string $filler What string to use as filler.
      *
      * @return self
      */
@@ -50,9 +61,11 @@ class File extends BaseFile
     /**
      * Sets the size of this mock file.
      *
+     * @param int $size The size to set the mock file to.
+     *
      * @return self
      */
-    public function setSize(string $size): self
+    public function setSize(int $size): self
     {
         $this->size = $size;
         return $this;
