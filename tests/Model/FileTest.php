@@ -86,7 +86,7 @@ class FileTest extends BaseTest
 
         $checkFiles = [];
         foreach ($files as $name => $file) {
-            $checkFiles[$name] = new File($file, $tempDir);
+            $checkFiles[$name] = new File($file->getFilename(), $tempDir);
         }
 
         return $checkFiles;

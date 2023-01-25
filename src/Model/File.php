@@ -97,6 +97,7 @@ class File extends Summable
      */
     public function __construct(string $file, Directory $dir)
     {
+        $this->validateName($file);
         $this->file = $file;
         $this->dir = $dir;
     }
@@ -125,6 +126,16 @@ class File extends Summable
     public function getDirectory(): Directory
     {
         return $this->dir;
+    }
+
+    /**
+     * Returns the filename of this file.
+     *
+     * @return string
+     */
+    public function getFilename(): string
+    {
+        return $this->file;
     }
 
     /**
@@ -251,5 +262,21 @@ class File extends Summable
         $this->device = $stat['dev'];
         $this->inode = $stat['ino'];
         $this->size = $stat['size'];
+    }
+
+    /**
+     * Confirms that the filename is valid.
+     *
+     * @param string $file The filename to validate.
+     *
+     * @return void
+     *
+     * @throws \Exception
+     */
+    protected function validateName(string $file): void
+    {
+        if (str_contains($file, DIRECTORY_SEPARATOR)) {
+            throw new \Exception('Filenames cannot contain Directory separators');
+        }
     }
 }
