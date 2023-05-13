@@ -177,13 +177,13 @@ class FuniqueCommand extends Command
                 }
 
                 foreach (file($checksumFile) as $line) {
-                    list($checksum, $file) = explode(' ', $line, 2);
+                    [$checksum, $file] = explode(' ', $line, 2);
 
                     $checksumFiles[$side][] = new ChecksumEntry(trim($checksum), trim($file));
                 }
             }
 
-            $sizeGroups = array_merge($sizeGroups, array_keys($files[$side]));
+            $sizeGroups = [...$sizeGroups, ...array_keys($files[$side])];
         }
 
         $sizeGroups = array_unique($sizeGroups);

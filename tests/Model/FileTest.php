@@ -49,8 +49,8 @@ class FileTest extends BaseTest
 
         $unit = 1024;
 
-        $size1 = rand($minimumSize + ($unit * 1), $minimumSize + ($unit * 2));
-        $size2 = rand($minimumSize + ($unit * 4), $minimumSize + ($unit * 8));
+        $size1 = random_int($minimumSize + ($unit * 1), $minimumSize + ($unit * 2));
+        $size2 = random_int($minimumSize + ($unit * 4), $minimumSize + ($unit * 8));
 
         $filler1 = Uuid::uuid4() . "\n";
         $filler2 = Uuid::uuid1() . "\n";

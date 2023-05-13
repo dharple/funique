@@ -45,7 +45,7 @@ class DirectoryService
 
         try {
             $entries = $dir->getEntries();
-        } catch (Exception $e) {
+        } catch (Exception) {
             return [];
         }
 
@@ -64,7 +64,7 @@ class DirectoryService
                     // ignore empty files
                     continue;
                 }
-            } catch (Exception $e) {
+            } catch (Exception) {
                 $debugIo->text(sprintf('unable to load size on %s', $entry->getPath()));
                 continue;
             }

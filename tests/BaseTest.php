@@ -42,14 +42,14 @@ abstract class BaseTest extends TestCase
 
             $fullPath = Path::canonicalize(sprintf('%s/%s', $tempDir, $name));
 
-            if (substr($fullPath, 0, strlen($tempDir)) != $tempDir) {
+            if (!str_starts_with($fullPath, $tempDir)) {
                 throw new \Exception(sprintf('Attempted to break out of jail using path %s', $file->getPath()));
             }
 
             try {
                 $size = $file->getSize();
-            } catch (\Exception $e) {
-                $size = mt_rand(0, 1000000);
+            } catch (\Exception) {
+                $size = random_int(0, 1000000);
             }
 
             $repeatCount = (int) ceil($size / strlen($file->getFiller()));

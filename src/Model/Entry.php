@@ -14,7 +14,7 @@ namespace Outsanity\Funique\Model;
 /**
  * Describes either a directory or a file
  */
-abstract class Entry
+abstract class Entry implements \Stringable
 {
     /**
      * Returns the full path to this entry.
