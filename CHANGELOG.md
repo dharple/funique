@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 # [Unreleased]
 ## Added
 - Added rector support.
+- Added support for including hidden files and directories in the review set,
+  by passing `--hidden` on the command line.
 
 ## Changed
 - Updated code to rector's PHP 8.1 standards (with several exceptions).

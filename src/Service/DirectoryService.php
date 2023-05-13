@@ -33,18 +33,19 @@ class DirectoryService
      *
      * @param Directory    $dir             The directory to load.
      * @param int          $groupingDivisor The divisor to split up groups by.
+     * @param bool         $includeHidden   True to include hidden files and directories.
      * @param SymfonyStyle $debugIo         A CLI styling interface.
      *
      * @return File[][]
      */
-    public function loadDirectory(Directory $dir, int $groupingDivisor, SymfonyStyle $debugIo)
+    public function loadDirectory(Directory $dir, int $groupingDivisor, bool $includeHidden, SymfonyStyle $debugIo)
     {
         $ret = [];
 
         $debugIo->text(sprintf('loading dir: %s', $dir));
 
         try {
-            $entries = $dir->getEntries();
+            $entries = $dir->getEntries($includeHidden);
         } catch (Exception) {
             return [];
         }
@@ -85,7 +86,7 @@ class DirectoryService
                 continue;
             }
 
-            $merge = $this->loadDirectory($entry, $groupingDivisor, $debugIo);
+            $merge = $this->loadDirectory($entry, $groupingDivisor, $includeHidden, $debugIo);
             foreach ($merge as $sizeGroup => $files) {
                 if (!array_key_exists($sizeGroup, $ret)) {
                     $ret[$sizeGroup] = $files;

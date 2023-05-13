@@ -82,6 +82,7 @@ class FuniqueCommand extends Command
             ->setName('funique')
             ->setDescription('compares two sets of directories and/or checksum files, and reports files unique to one or the other')
             ->addOption('checksum', null, InputOption::VALUE_REQUIRED, 'the checksum algorithm to use', 'sha512')
+            ->addOption('hidden', null, InputOption::VALUE_NONE, 'include hidden files and directories to review')
             ->addOption('left-checksum-file', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'the left-hand checksum file(s)', [])
             ->addOption('left', 'l', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'the left-hand directory or directories', [])
             ->addOption('output', 'o', InputOption::VALUE_REQUIRED, 'redirect output to file', '')
@@ -134,6 +135,11 @@ class FuniqueCommand extends Command
             return Command::FAILURE;
         }
 
+        $includeHidden = $input->getOption('hidden');
+        if ($includeHidden) {
+            $io->text('including hidden files and directories in the review');
+        }
+
         $files = [];
         $sizeGroups = [];
         $leftHandCount = 0;
@@ -155,7 +161,7 @@ class FuniqueCommand extends Command
                 }
 
                 $dir = new Directory($path, $parent);
-                $dirFiles = $this->directoryService->loadDirectory($dir, $this->groupingDivisor, $debugIo);
+                $dirFiles = $this->directoryService->loadDirectory($dir, $this->groupingDivisor, $includeHidden, $debugIo);
                 foreach ($dirFiles as $sizeGroup => $contents) {
                     if (array_key_exists($sizeGroup, $files[$side])) {
                         $files[$side][$sizeGroup] = array_merge($files[$side][$sizeGroup], $contents);
