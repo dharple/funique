@@ -17,7 +17,7 @@ return static function (RectorConfig $rectorConfig): void {
         LevelSetList::UP_TO_PHP_81,
     ]);
 
-    // register a single rule
+    // skip individual rules
     $rectorConfig->skip([
         //
         // I'm skipping this because I want to make sure it's correct before
