@@ -46,6 +46,7 @@
         "phpcbf":   "phpcbf",
         "phpcs":    "phpcs",
         "phpstan":  "phpstan analyse",
+        "rector":   "rector",
         "test":     "phpunit"
     }
 }
