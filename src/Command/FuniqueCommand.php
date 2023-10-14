@@ -32,6 +32,13 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class FuniqueCommand extends Command
 {
     /**
+     * Script name
+     *
+     * @var string
+     */
+    protected static $defaultName = 'funique';
+
+    /**
      * The directory service.
      *
      * @var DirectoryService
@@ -78,9 +85,7 @@ class FuniqueCommand extends Command
      */
     protected function configure()
     {
-        $this
-            ->setName('funique')
-            ->setDescription('compares two sets of directories and/or checksum files, and reports files unique to one or the other')
+        $this->setDescription('compares two sets of directories and/or checksum files, and reports files unique to one or the other')
             ->addOption('checksum', null, InputOption::VALUE_REQUIRED, 'the checksum algorithm to use', 'sha512')
             ->addOption('hidden', null, InputOption::VALUE_NONE, 'include hidden files and directories to review')
             ->addOption('left-checksum-file', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'the left-hand checksum file(s)', [])
