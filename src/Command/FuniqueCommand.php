@@ -200,6 +200,18 @@ class FuniqueCommand extends Command
         $sizeGroups = array_unique($sizeGroups);
         sort($sizeGroups);
 
+        // do a quick pass through checksums, so it doesn't affect the progress
+        // bar (due to sleeps from 'work' done)
+
+        if (!empty($checksumFiles['left']) && !empty($checksumFiles['right'])) {
+            if ($output->isVerbose()) {
+                $io->text('pre-comparing checksums');
+            }
+            $this->reviewChecksumsOnly($checksumFiles['left'], $checksumFiles['right'], $checksumAlgorithm, $debugIo);
+        }
+
+        // start actual work
+
         if ($output->isVerbose()) {
             $io->text('comparing loaded files');
         }
@@ -211,6 +223,20 @@ class FuniqueCommand extends Command
         foreach ($sizeGroups as $sizeGroup) {
             $filesLeft = array_key_exists($sizeGroup, $files['left']) ? $files['left'][$sizeGroup] : [];
             $filesRight = array_key_exists($sizeGroup, $files['right']) ? $files['right'][$sizeGroup] : [];
+
+            // check hardlinks first
+
+            if (!empty($filesLeft) && !empty($filesRight)) {
+                $debugIo->text(sprintf(
+                    'reviewing files between %d and %d bytes',
+                    ($sizeGroup * $this->groupingDivisor),
+                    (($sizeGroup + 1) * $this->groupingDivisor)
+                ));
+
+                $this->reviewHardlinks($filesLeft, $filesRight, $debugIo);
+            }
+
+            // bring in checksums, if they exist
 
             if (count($checksumFiles['left']) > 0) {
                 $filesLeft = array_merge($filesLeft, $checksumFiles['left']);
@@ -224,89 +250,29 @@ class FuniqueCommand extends Command
                 continue;
             }
 
-            $debugIo->text(sprintf(
-                'reviewing files between %d and %d bytes',
-                ($sizeGroup * $this->groupingDivisor),
-                (($sizeGroup + 1) * $this->groupingDivisor)
-            ));
-
-            $iterationCount = 0;
-
-            // check hardlinks first
-
-            foreach ($filesLeft as $fileLeft) {
-                foreach ($filesRight as $fileRight) {
-                    if ($fileLeft->isUnique() === false && $fileRight->isUnique() === false) {
-                        continue;
-                    }
-
-                    if ($this->fileService->checkHardlink($fileLeft, $fileRight, $debugIo)) {
-                        $fileLeft->isUnique(false);
-                        $fileRight->isUnique(false);
-                    }
-                }
-            }
-
             // then review size and checksums
 
-            if ($output->isDebug()) {
-                $fileLeftUnique = 0;
-                $fileRightUnique = 0;
-                $checksumLeftUnique = 0;
-                $checksumRightUnique = 0;
-
-                foreach ($filesLeft as $fileLeft) {
-                    if ($fileLeft->isUnique()) {
-                        if ($fileLeft instanceof File) {
-                            $fileLeftUnique++;
-                        } else {
-                            $checksumLeftUnique++;
-                        }
-                    }
-                }
-
-                foreach ($filesRight as $fileRight) {
-                    if ($fileRight->isUnique()) {
-                        if ($fileRight instanceof File) {
-                            $fileRightUnique++;
-                        } else {
-                            $checksumRightUnique++;
-                        }
-                    }
-                }
-
+            if ($this->hasUnique($filesLeft, $filesRight, $debugIo)) {
                 $debugIo->text(sprintf(
-                    'Starting a checksum review of %s left files vs %s right files, and %s left checksums vs %s right checksums',
-                    $fileLeftUnique,
-                    $fileRightUnique,
-                    $checksumLeftUnique,
-                    $checksumRightUnique
+                    'reviewing checksums between %d and %d bytes',
+                    ($sizeGroup * $this->groupingDivisor),
+                    (($sizeGroup + 1) * $this->groupingDivisor)
                 ));
-            }
 
-            foreach ($filesLeft as $fileLeft) {
-                $checkedContents = false;
-
-                foreach ($filesRight as $fileRight) {
-                    if ($fileLeft->isUnique() === false && $fileRight->isUnique() === false) {
-                        continue;
-                    }
-
-                    if ($this->fileService->checkContents($fileLeft, $fileRight, $checksumAlgorithm, $debugIo)) {
-                        $fileLeft->isUnique(false);
-                        $fileRight->isUnique(false);
-                    }
-
-                    $checkedContents = true;
-                }
-
-                if ($output->isVerbose() && !$output->isDebug() && ($fileLeft instanceof File)) {
-                    $io->progressAdvance();
-                }
-
-                if ($checkedContents) {
-                    if (++$iterationCount % 10 == 0) {
-                        usleep($this->sleepTime);
+                $this->reviewChecksums(
+                    $filesLeft,
+                    $filesRight,
+                    $checksumAlgorithm,
+                    $debugIo,
+                    (($output->isVerbose() && !$output->isDebug()) ? $io : null)
+                );
+            } else {
+                $debugIo->text('skipping checksum review...');
+                if ($output->isVerbose() && !$output->isDebug()) {
+                    foreach ($filesLeft as $fileLeft) {
+                        if ($fileLeft instanceof File) {
+                            $io->progressAdvance();
+                        }
                     }
                 }
             }
@@ -345,5 +311,144 @@ class FuniqueCommand extends Command
         fclose($outputHandle);
 
         return Command::SUCCESS;
+    }
+
+    /**
+     * Determine whether or not any unique files exist in the set.
+     *
+     * @param mixed        $filesLeft
+     * @param mixed        $filesRight
+     * @param SymfonyStyle $debugIo
+     *
+     * @return bool
+     */
+    protected function hasUnique(mixed $filesLeft, mixed $filesRight, SymfonyStyle $debugIo): bool
+    {
+        $checksumLeftUnique = 0;
+        $checksumRightUnique = 0;
+        $fileLeftUnique = 0;
+        $fileRightUnique = 0;
+        $ret = false;
+
+        foreach ($filesLeft as $fileLeft) {
+            if ($fileLeft->isUnique()) {
+                $ret = true;
+                if ($fileLeft instanceof File) {
+                    $fileLeftUnique++;
+                } else {
+                    $checksumLeftUnique++;
+                }
+            }
+        }
+
+        foreach ($filesRight as $fileRight) {
+            if ($fileRight->isUnique()) {
+                $ret = true;
+                if ($fileRight instanceof File) {
+                    $fileRightUnique++;
+                } else {
+                    $checksumRightUnique++;
+                }
+            }
+        }
+
+        $debugIo->text(sprintf(
+            'set contains %s left files vs %s right files, and %s left checksums vs %s right checksums',
+            $fileLeftUnique,
+            $fileRightUnique,
+            $checksumLeftUnique,
+            $checksumRightUnique
+        ));
+
+        return $ret;
+    }
+
+    /**
+     * Review checkums (pre-loaded and calculated) for any combination of
+     * non-unique files in the set.
+     *
+     * @param mixed         $filesLeft
+     * @param mixed         $filesRight
+     * @param mixed         $checksumAlgorithm
+     * @param SymfonyStyle  $debugIo
+     * @param ?SymfonyStyle $progressBarIo
+     */
+    public function reviewChecksums(mixed $filesLeft, mixed $filesRight, mixed $checksumAlgorithm, SymfonyStyle $debugIo, ?SymfonyStyle $progressBarIo): void
+    {
+        $iterationCount = 0;
+
+        foreach ($filesLeft as $fileLeft) {
+            $checkedContents = false;
+
+            foreach ($filesRight as $fileRight) {
+                if ($fileLeft->isUnique() === false && $fileRight->isUnique() === false) {
+                    continue;
+                }
+
+                if ($this->fileService->checkContents($fileLeft, $fileRight, $checksumAlgorithm, $debugIo)) {
+                    $fileLeft->isUnique(false);
+                    $fileRight->isUnique(false);
+                }
+
+                $checkedContents = true;
+            }
+
+            if (isset($progressBarIo) && ($fileLeft instanceof File)) {
+                $progressBarIo->progressAdvance();
+            }
+
+            if ($checkedContents) {
+                if (++$iterationCount % 10 == 0) {
+                    usleep($this->sleepTime);
+                }
+            }
+        }
+    }
+
+    /**
+     * Review pre-loaded checksums only.
+     *
+     * @param array        $filesLeft
+     * @param array        $filesRight
+     * @param mixed        $checksumAlgorithm
+     * @param SymfonyStyle $debugIo
+     */
+    public function reviewChecksumsOnly(array $filesLeft, array $filesRight, mixed $checksumAlgorithm, SymfonyStyle $debugIo): void
+    {
+        foreach ($filesLeft as $fileLeft) {
+            foreach ($filesRight as $fileRight) {
+                if ($fileLeft->isUnique() === false && $fileRight->isUnique() === false) {
+                    continue;
+                }
+
+                if ($this->fileService->checkContents($fileLeft, $fileRight, $checksumAlgorithm, $debugIo)) {
+                    $fileLeft->isUnique(false);
+                    $fileRight->isUnique(false);
+                }
+            }
+        }
+    }
+
+    /**
+     * Review files only, looking for hardlinks.
+     *
+     * @param mixed        $filesLeft
+     * @param mixed        $filesRight
+     * @param SymfonyStyle $debugIo
+     */
+    public function reviewHardlinks(mixed $filesLeft, mixed $filesRight, SymfonyStyle $debugIo): void
+    {
+        foreach ($filesLeft as $fileLeft) {
+            foreach ($filesRight as $fileRight) {
+                if ($fileLeft->isUnique() === false && $fileRight->isUnique() === false) {
+                    continue;
+                }
+
+                if ($this->fileService->checkHardlink($fileLeft, $fileRight, $debugIo)) {
+                    $fileLeft->isUnique(false);
+                    $fileRight->isUnique(false);
+                }
+            }
+        }
     }
 }
