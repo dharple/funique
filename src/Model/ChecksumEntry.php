@@ -2,7 +2,6 @@
 
 /**
  * This file is part of the funique package.
-        return $this->getPath();
  *
  * (c) Doug Harple <dharple@gmail.com>
  *
