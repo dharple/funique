@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   iterations have occurred, *and* disk access has occurred.  This stops
   unneccessary sleeps from occurring when very large checksum files are present
   on both sides.
+- When comparing two sets with a large number of checksums on both sides, the
+  comparison between the checksums themselves only occurs once during
+  processing.
 
 # [0.6.0] - 2023-12-02
 

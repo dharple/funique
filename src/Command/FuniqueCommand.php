@@ -75,6 +75,13 @@ class FuniqueCommand extends Command
     protected $sleepTime = 1000;
 
     /**
+     * Review groups
+     */
+    protected const REVIEW_PRIMARY = 'only files';
+    protected const REVIEW_LEFT_CHECKSUMS = 'right files and left checksums';
+    protected const REVIEW_RIGHT_CHECKSUMS = 'left files and right checksums';
+
+    /**
      * Constructs a new funique command.
      */
     public function __construct()
@@ -208,8 +215,7 @@ class FuniqueCommand extends Command
         $sizeGroups = array_unique($sizeGroups);
         sort($sizeGroups);
 
-        // do a quick pass through checksums, so it doesn't affect the progress
-        // bar (due to sleeps from 'work' done)
+        // review left vs right checksums once
 
         if (!empty($checksumFiles['left']) && !empty($checksumFiles['right'])) {
             if ($output->isVerbose()) {
@@ -224,7 +230,8 @@ class FuniqueCommand extends Command
             $io->text('comparing loaded files');
         }
 
-        if ($output->isVerbose() && !$output->isDebug()) {
+        $showBar = ($output->isVerbose() && !$output->isDebug());
+        if ($showBar) {
             $io->progressStart($leftHandCount);
         }
 
@@ -236,7 +243,7 @@ class FuniqueCommand extends Command
 
             if (!empty($filesLeft) && !empty($filesRight)) {
                 $debugIo->text(sprintf(
-                    'reviewing files between %d and %d bytes',
+                    'reviewing hardlinks between %d and %d bytes',
                     ($sizeGroup * $this->groupingDivisor),
                     (($sizeGroup + 1) * $this->groupingDivisor)
                 ));
@@ -245,48 +252,58 @@ class FuniqueCommand extends Command
             }
 
             // bring in checksums, if they exist
+            $rounds = [
+                static::REVIEW_PRIMARY => [
+                    'left'  => $filesLeft,
+                    'right' => $filesRight,
+                ],
+                static::REVIEW_LEFT_CHECKSUMS => [
+                    'left'  => $checksumFiles['left'],
+                    'right' => $filesRight,
+                ],
+                static::REVIEW_RIGHT_CHECKSUMS => [
+                    'left'  => $filesLeft,
+                    'right' => $checksumFiles['right'],
+                ],
+            ];
 
-            if (count($checksumFiles['left']) > 0) {
-                $filesLeft = array_merge($filesLeft, $checksumFiles['left']);
-            }
+            $movedBar = false;
 
-            if (count($checksumFiles['right']) > 0) {
-                $filesRight = array_merge($filesRight, $checksumFiles['right']);
-            }
+            foreach ($rounds as $which => $review) {
+                if (empty($review['left']) || empty($review['right'])) {
+                    continue;
+                }
 
-            if (empty($filesLeft) || empty($filesRight)) {
-                continue;
-            }
+                if ($this->hasUnique($review['left'], $review['right'], $debugIo)) {
+                    $debugIo->text(sprintf(
+                        'reviewing checksums between %d and %d bytes (%s)',
+                        ($sizeGroup * $this->groupingDivisor),
+                        (($sizeGroup + 1) * $this->groupingDivisor),
+                        $which,
+                    ));
 
-            // then review size and checksums
-
-            if ($this->hasUnique($filesLeft, $filesRight, $debugIo)) {
-                $debugIo->text(sprintf(
-                    'reviewing checksums between %d and %d bytes',
-                    ($sizeGroup * $this->groupingDivisor),
-                    (($sizeGroup + 1) * $this->groupingDivisor)
-                ));
-
-                $this->reviewChecksums(
-                    $filesLeft,
-                    $filesRight,
-                    $checksumAlgorithm,
-                    $debugIo,
-                    (($output->isVerbose() && !$output->isDebug()) ? $io : null)
-                );
-            } else {
-                $debugIo->text('skipping checksum review...');
-                if ($output->isVerbose() && !$output->isDebug()) {
-                    foreach ($filesLeft as $fileLeft) {
-                        if ($fileLeft instanceof File) {
-                            $io->progressAdvance();
-                        }
+                    if ($which === static::REVIEW_PRIMARY) {
+                        $movedBar = true;
                     }
+
+                    $this->reviewChecksums(
+                        $review['left'],
+                        $review['right'],
+                        $checksumAlgorithm,
+                        $debugIo,
+                        ($which === static::REVIEW_PRIMARY && $showBar) ? $io : null
+                    );
+                }
+            }
+
+            if ($showBar && !$movedBar) {
+                foreach ($filesLeft as $ignore) {
+                    $io->progressAdvance();
                 }
             }
         }
 
-        if ($output->isVerbose() && !$output->isDebug()) {
+        if ($showBar) {
             $io->progressFinish();
         }
 
@@ -361,10 +378,10 @@ class FuniqueCommand extends Command
         }
 
         $debugIo->text(sprintf(
-            'set contains %s left files vs %s right files, and %s left checksums vs %s right checksums',
+            'unique: %d left files and %d left checksums vs %d right files and %d right checksums',
             $fileLeftUnique,
-            $fileRightUnique,
             $checksumLeftUnique,
+            $fileRightUnique,
             $checksumRightUnique
         ));
 
