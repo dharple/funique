@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 # [Unreleased]
 
+## Changed
+- Sleeping in the main processing loop now occurs when a certain number of
+  iterations have occurred, *and* disk access has occurred.  This stops
+  unneccessary sleeps from occurring when very large checksum files are present
+  on both sides.
+
 # [0.6.0] - 2023-12-02
 
 ## Changed

@@ -16,6 +16,7 @@ use Outsanity\Funique\Model\BaseDirectory;
 use Outsanity\Funique\Model\ChecksumEntry;
 use Outsanity\Funique\Model\Directory;
 use Outsanity\Funique\Model\File;
+use Outsanity\Funique\Service\AccessService;
 use Outsanity\Funique\Service\DirectoryService;
 use Outsanity\Funique\Service\FileService;
 use Symfony\Component\Console\Command\Command;
@@ -58,6 +59,13 @@ class FuniqueCommand extends Command
      * @var int
      */
     protected $groupingDivisor = 256;
+
+    /**
+     * Sleep rate in number of iterations per sleep
+     *
+     * @var int
+     */
+    protected $sleepRate = 10;
 
     /**
      * Sleep time in microseconds
@@ -375,7 +383,8 @@ class FuniqueCommand extends Command
      */
     public function reviewChecksums(mixed $filesLeft, mixed $filesRight, mixed $checksumAlgorithm, SymfonyStyle $debugIo, ?SymfonyStyle $progressBarIo): void
     {
-        $iterationCount = 0;
+        static $iterationCount = 0;
+        static $lastAccess = null;
 
         foreach ($filesLeft as $fileLeft) {
             $checkedContents = false;
@@ -390,17 +399,14 @@ class FuniqueCommand extends Command
                     $fileRight->isUnique(false);
                 }
 
-                $checkedContents = true;
+                if ((++$iterationCount % $this->sleepRate === 0) && (AccessService::getLastAccess() != $lastAccess)) {
+                    $lastAccess = AccessService::getLastAccess();
+                    usleep($this->sleepTime);
+                }
             }
 
             if (isset($progressBarIo) && ($fileLeft instanceof File)) {
                 $progressBarIo->progressAdvance();
-            }
-
-            if ($checkedContents) {
-                if (++$iterationCount % 10 == 0) {
-                    usleep($this->sleepTime);
-                }
             }
         }
     }

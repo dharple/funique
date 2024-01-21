@@ -12,6 +12,7 @@
 namespace Outsanity\Funique\Model;
 
 use Exception;
+use Outsanity\Funique\Service\AccessService;
 
 /**
  * Describes a file
@@ -174,6 +175,8 @@ class File extends Summable
         $header = fread($fp, static::LEADING_CHECKSUM_SIZE);
         fclose($fp);
 
+        AccessService::setLastAccess();
+
         return $this->leadingSum = hash(static::LEADING_CHECKSUM_ALGORITHM, $header);
     }
 
@@ -227,6 +230,8 @@ class File extends Summable
         }
 
         $this->checksumAlgorithm = $checksumAlgorithm;
+
+        AccessService::setLastAccess();
 
         return $this->checksum = hash_file($checksumAlgorithm, $this->getPath());
     }
