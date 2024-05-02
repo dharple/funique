@@ -15,12 +15,12 @@ use Exception;
 use Ramsey\Uuid\Uuid;
 use Outsanity\Funique\Model\Directory;
 use Outsanity\Funique\Model\ChecksumEntry;
-use Outsanity\Tests\Funique\BaseTest;
+use Outsanity\Tests\Funique\BaseTestCase;
 
 /**
  * Tests for the ChecksumEntry model.
  */
-class ChecksumEntryTest extends BaseTest
+class ChecksumEntryTest extends BaseTestCase
 {
     protected const HASH_ALGORITHM = 'whirlpool';
 

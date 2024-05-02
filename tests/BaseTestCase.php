@@ -20,7 +20,7 @@ use Symfony\Component\Filesystem\Path;
 /**
  * Defines a test case in the funique test suite.
  */
-abstract class BaseTest extends TestCase
+abstract class BaseTestCase extends TestCase
 {
     /**
      * Builds a test directory with files described in an array.

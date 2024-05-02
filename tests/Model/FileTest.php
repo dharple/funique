@@ -15,14 +15,14 @@ use Exception;
 use Ramsey\Uuid\Uuid;
 use Outsanity\Funique\Model\Directory;
 use Outsanity\Funique\Model\File;
-use Outsanity\Tests\Funique\BaseTest;
+use Outsanity\Tests\Funique\BaseTestCase;
 use Outsanity\Tests\Funique\Mock\Model\Directory as MockDirectory;
 use Outsanity\Tests\Funique\Mock\Model\File as MockFile;
 
 /**
  * Tests for the File model.
  */
-class FileTest extends BaseTest
+class FileTest extends BaseTestCase
 {
     protected const FILE_CORRECT1   = 'same1';
     protected const FILE_CORRECT2   = 'same2';

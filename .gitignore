@@ -9,3 +9,4 @@ composer-ci.json
 phpcs.xml
 phpunit.xml
 /coverage/
+/.phpunit.cache/

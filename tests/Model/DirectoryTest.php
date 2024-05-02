@@ -15,14 +15,14 @@ use Exception;
 use Ramsey\Uuid\Uuid;
 use Outsanity\Funique\Model\Directory;
 use Outsanity\Funique\Model\File;
-use Outsanity\Tests\Funique\BaseTest;
+use Outsanity\Tests\Funique\BaseTestCase;
 use Outsanity\Tests\Funique\Mock\Model\Directory as MockDirectory;
 use Outsanity\Tests\Funique\Mock\Model\File as MockFile;
 
 /**
  * Tests for the Directory model.
  */
-class DirectoryTest extends BaseTest
+class DirectoryTest extends BaseTestCase
 {
     /**
      * Returns an array of File from a (temporary) physical directory

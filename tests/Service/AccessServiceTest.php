@@ -13,12 +13,12 @@ namespace Outsanity\Tests\Funique\Service;
 
 use Exception;
 use Outsanity\Funique\Service\AccessService;
-use Outsanity\Tests\Funique\BaseTest;
+use Outsanity\Tests\Funique\BaseTestCase;
 
 /**
  * Tests for the AccessService model.
  */
-class AccessServiceTest extends BaseTest
+class AccessServiceTest extends BaseTestCase
 {
     /**
      * How many times to test setLastAccess.
