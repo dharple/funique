@@ -126,6 +126,10 @@ class FuniqueCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $debugIo = $output->isDebug() ? $io : new SymfonyStyle($input, new NullOutput());
 
+        if ($output->isVerbose()) {
+            $io->newLine();
+        }
+
         $sides = ['left', 'right'];
 
         foreach ($sides as $side) {

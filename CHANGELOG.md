@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added additional needed files to the build manifest.  `symfony/console` needs
   its `Resource/` directory.
+- Re-added leading blank line in verbose mode.  Symfony 6.x removed it.
 
 # [0.8.0] - 2024-05-01
 
