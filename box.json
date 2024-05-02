@@ -3,6 +3,7 @@
     "output": "dist/funique.phar",
 
     "directories": ["src"],
+    "directories-bin": ["vendor/symfony/console/Resources"],
     "finder": [
         {
             "name": "*.php",
