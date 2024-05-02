@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Outsanity\Tests\Funique\Model;
+namespace Outsanity\Tests\Funique\Service;
 
 use Exception;
 use Outsanity\Funique\Service\AccessService;
@@ -71,5 +71,4 @@ class AccessServiceTest extends BaseTest
             $previous = $change;
         }
     }
-
 }

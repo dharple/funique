@@ -38,6 +38,6 @@ class AccessService
      */
     public static function setLastAccess(): void
     {
-        static::$lastAccess = hrtime(true);
+        static::$lastAccess = (string) hrtime(true);
     }
 }
