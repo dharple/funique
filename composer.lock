@@ -967,21 +967,21 @@
         },
         {
             "name": "ork/phpcs",
-            "version": "2.8.4",
+            "version": "2.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/AlexHowansky/ork-phpcs.git",
-                "reference": "a375aec4a75438a1720de62f43b6bde2941072ed"
+                "reference": "47a4c07dfcc20bdb8d0eff7969a7d30a8a60d9e9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/AlexHowansky/ork-phpcs/zipball/a375aec4a75438a1720de62f43b6bde2941072ed",
-                "reference": "a375aec4a75438a1720de62f43b6bde2941072ed",
+                "url": "https://api.github.com/repos/AlexHowansky/ork-phpcs/zipball/47a4c07dfcc20bdb8d0eff7969a7d30a8a60d9e9",
+                "reference": "47a4c07dfcc20bdb8d0eff7969a7d30a8a60d9e9",
                 "shasum": ""
             },
             "require": {
-                "dealerdirect/phpcodesniffer-composer-installer": "^1.0.0",
-                "squizlabs/php_codesniffer": "^3.9.1"
+                "dealerdirect/phpcodesniffer-composer-installer": ">=1",
+                "squizlabs/php_codesniffer": ">=3.11.2"
             },
             "type": "phpcodesniffer-standard",
             "notification-url": "https://packagist.org/downloads/",
@@ -1003,9 +1003,9 @@
             ],
             "support": {
                 "issues": "https://github.com/AlexHowansky/ork-phpcs/issues",
-                "source": "https://github.com/AlexHowansky/ork-phpcs/tree/2.8.4"
+                "source": "https://github.com/AlexHowansky/ork-phpcs/tree/2.9.0"
             },
-            "time": "2024-09-15T17:57:55+00:00"
+            "time": "2025-01-16T23:18:14+00:00"
         },
         {
             "name": "outsanity/phpcs",
@@ -1163,16 +1163,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.12.14",
+            "version": "1.12.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "e73868f809e68fff33be961ad4946e2e43ec9e38"
+                "reference": "e0bb5cb78545aae631220735aa706eac633a6be9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/e73868f809e68fff33be961ad4946e2e43ec9e38",
-                "reference": "e73868f809e68fff33be961ad4946e2e43ec9e38",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/e0bb5cb78545aae631220735aa706eac633a6be9",
+                "reference": "e0bb5cb78545aae631220735aa706eac633a6be9",
                 "shasum": ""
             },
             "require": {
@@ -1217,7 +1217,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-12-31T07:26:13+00:00"
+            "time": "2025-01-21T14:50:05+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -1542,16 +1542,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "10.5.40",
+            "version": "10.5.44",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "e6ddda95af52f69c1e0c7b4f977cccb58048798c"
+                "reference": "1381c62769be4bb88fa4c5aec1366c7c66ca4f36"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/e6ddda95af52f69c1e0c7b4f977cccb58048798c",
-                "reference": "e6ddda95af52f69c1e0c7b4f977cccb58048798c",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/1381c62769be4bb88fa4c5aec1366c7c66ca4f36",
+                "reference": "1381c62769be4bb88fa4c5aec1366c7c66ca4f36",
                 "shasum": ""
             },
             "require": {
@@ -1623,7 +1623,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/10.5.40"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/10.5.44"
             },
             "funding": [
                 {
@@ -1639,7 +1639,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-12-21T05:49:06+00:00"
+            "time": "2025-01-31T07:00:38+00:00"
         },
         {
             "name": "ramsey/collection",
@@ -2801,16 +2801,16 @@
         },
         {
             "name": "squizlabs/php_codesniffer",
-            "version": "3.11.2",
+            "version": "3.11.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHP_CodeSniffer.git",
-                "reference": "1368f4a58c3c52114b86b1abe8f4098869cb0079"
+                "reference": "ba05f990e79cbe69b9f35c8c1ac8dca7eecc3a10"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/1368f4a58c3c52114b86b1abe8f4098869cb0079",
-                "reference": "1368f4a58c3c52114b86b1abe8f4098869cb0079",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/ba05f990e79cbe69b9f35c8c1ac8dca7eecc3a10",
+                "reference": "ba05f990e79cbe69b9f35c8c1ac8dca7eecc3a10",
                 "shasum": ""
             },
             "require": {
@@ -2875,9 +2875,13 @@
                 {
                     "url": "https://opencollective.com/php_codesniffer",
                     "type": "open_collective"
+                },
+                {
+                    "url": "https://thanks.dev/phpcsstandards",
+                    "type": "thanks_dev"
                 }
             ],
-            "time": "2024-12-11T16:04:26+00:00"
+            "time": "2025-01-23T17:04:15+00:00"
         },
         {
             "name": "symfony/filesystem",
