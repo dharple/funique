@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Changed
 
 - Updated 3rd party dependencies.
+- Updated Symfony recipes.
 
 # [0.8.1] - 2024-06-01
 
