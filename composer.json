@@ -1,7 +1,7 @@
 {
     "name": "outsanity/funique",
     "description": "Finds files unique to one directory or another",
-    "type": "package",
+    "type": "project",
     "license": "BSD-2-Clause",
     "authors": [
         {
