@@ -28,7 +28,7 @@ use Symfony\Component\Console\Application;
 use Outsanity\Funique\Command\FuniqueCommand;
 
 try {
-    $application = new Application('funique', '1.0.0');
+    $application = new Application('funique', '1.0.1-dev');
     $application->setCatchExceptions(false);
     $command = new FuniqueCommand();
     $application->add($command);
