@@ -12,12 +12,12 @@
     "require": {
         "php": "^8.2.29",
         "symfony/console": "^6.4.27",
-        "symfony/flex": "^2.9.0"
+        "symfony/flex": "^2.10.0"
     },
     "require-dev": {
         "outsanity/phpcs": ">=0.4.0",
         "phpstan/phpstan": "^1.12.32",
-        "phpunit/phpunit": "^10.5.30",
+        "phpunit/phpunit": "^10.5.58",
         "ramsey/uuid": "^4.9.1",
         "rector/rector": "^0.16.0",
         "symfony/dotenv": "^6.4.24",
