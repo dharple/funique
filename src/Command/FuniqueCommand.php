@@ -345,10 +345,6 @@ class FuniqueCommand extends Command
     /**
      * Determine whether or not any unique files exist in the set.
      *
-     * @param mixed        $filesLeft
-     * @param mixed        $filesRight
-     * @param SymfonyStyle $debugIo
-     *
      * @return bool
      */
     protected function hasUnique(mixed $filesLeft, mixed $filesRight, SymfonyStyle $debugIo): bool
@@ -395,12 +391,6 @@ class FuniqueCommand extends Command
     /**
      * Review checkums (pre-loaded and calculated) for any combination of
      * non-unique files in the set.
-     *
-     * @param mixed         $filesLeft
-     * @param mixed         $filesRight
-     * @param mixed         $checksumAlgorithm
-     * @param SymfonyStyle  $debugIo
-     * @param ?SymfonyStyle $progressBarIo
      */
     public function reviewChecksums(mixed $filesLeft, mixed $filesRight, mixed $checksumAlgorithm, SymfonyStyle $debugIo, ?SymfonyStyle $progressBarIo): void
     {
@@ -434,11 +424,6 @@ class FuniqueCommand extends Command
 
     /**
      * Review pre-loaded checksums only.
-     *
-     * @param array        $filesLeft
-     * @param array        $filesRight
-     * @param mixed        $checksumAlgorithm
-     * @param SymfonyStyle $debugIo
      */
     public function reviewChecksumsOnly(array $filesLeft, array $filesRight, mixed $checksumAlgorithm, SymfonyStyle $debugIo): void
     {
@@ -458,10 +443,6 @@ class FuniqueCommand extends Command
 
     /**
      * Review files only, looking for hardlinks.
-     *
-     * @param mixed        $filesLeft
-     * @param mixed        $filesRight
-     * @param SymfonyStyle $debugIo
      */
     public function reviewHardlinks(mixed $filesLeft, mixed $filesRight, SymfonyStyle $debugIo): void
     {
