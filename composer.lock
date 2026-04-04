@@ -61,16 +61,16 @@
         },
         {
             "name": "symfony/console",
-            "version": "v6.4.35",
+            "version": "v6.4.36",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "49257c96304c508223815ee965c251e7c79e614e"
+                "reference": "9f481cfb580db8bcecc9b2d4c63f3e13df022ad5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/49257c96304c508223815ee965c251e7c79e614e",
-                "reference": "49257c96304c508223815ee965c251e7c79e614e",
+                "url": "https://api.github.com/repos/symfony/console/zipball/9f481cfb580db8bcecc9b2d4c63f3e13df022ad5",
+                "reference": "9f481cfb580db8bcecc9b2d4c63f3e13df022ad5",
                 "shasum": ""
             },
             "require": {
@@ -135,7 +135,7 @@
                 "terminal"
             ],
             "support": {
-                "source": "https://github.com/symfony/console/tree/v6.4.35"
+                "source": "https://github.com/symfony/console/tree/v6.4.36"
             },
             "funding": [
                 {
@@ -155,7 +155,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-03-06T13:31:08+00:00"
+            "time": "2026-03-27T15:30:51+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",
@@ -3012,16 +3012,16 @@
         },
         {
             "name": "symfony/dotenv",
-            "version": "v6.4.35",
+            "version": "v6.4.36",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/dotenv.git",
-                "reference": "148138ead5d7bb582e93a9cc19b134b42a370365"
+                "reference": "cae019cc92a46fe9e498ea011107f26bdf5d897f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/dotenv/zipball/148138ead5d7bb582e93a9cc19b134b42a370365",
-                "reference": "148138ead5d7bb582e93a9cc19b134b42a370365",
+                "url": "https://api.github.com/repos/symfony/dotenv/zipball/cae019cc92a46fe9e498ea011107f26bdf5d897f",
+                "reference": "cae019cc92a46fe9e498ea011107f26bdf5d897f",
                 "shasum": ""
             },
             "require": {
@@ -3066,7 +3066,7 @@
                 "environment"
             ],
             "support": {
-                "source": "https://github.com/symfony/dotenv/tree/v6.4.35"
+                "source": "https://github.com/symfony/dotenv/tree/v6.4.36"
             },
             "funding": [
                 {
@@ -3086,7 +3086,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-02-26T10:15:49+00:00"
+            "time": "2026-03-30T07:25:04+00:00"
         },
         {
             "name": "symfony/filesystem",
