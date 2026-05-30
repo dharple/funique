@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f03a5deef16f7e43386e08176864e37b",
+    "content-hash": "82f7b3f68d6c003aae5095cb3a050e18",
     "packages": [
         {
             "name": "psr/container",
@@ -1090,21 +1090,21 @@
         },
         {
             "name": "ork/phpcs",
-            "version": "2.10.0",
+            "version": "3.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/AlexHowansky/ork-phpcs.git",
-                "reference": "c4159d67e56f721b1b6c4e9a8f552fa7ba0c45be"
+                "reference": "9bd5934b6f2ccfed2209311b8327a55b3bf9efa3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/AlexHowansky/ork-phpcs/zipball/c4159d67e56f721b1b6c4e9a8f552fa7ba0c45be",
-                "reference": "c4159d67e56f721b1b6c4e9a8f552fa7ba0c45be",
+                "url": "https://api.github.com/repos/AlexHowansky/ork-phpcs/zipball/9bd5934b6f2ccfed2209311b8327a55b3bf9efa3",
+                "reference": "9bd5934b6f2ccfed2209311b8327a55b3bf9efa3",
                 "shasum": ""
             },
             "require": {
-                "dealerdirect/phpcodesniffer-composer-installer": ">=1",
-                "squizlabs/php_codesniffer": ">=3.13.0"
+                "dealerdirect/phpcodesniffer-composer-installer": "^1.2.0",
+                "squizlabs/php_codesniffer": "^4.0.1"
             },
             "type": "phpcodesniffer-standard",
             "notification-url": "https://packagist.org/downloads/",
@@ -1126,29 +1126,29 @@
             ],
             "support": {
                 "issues": "https://github.com/AlexHowansky/ork-phpcs/issues",
-                "source": "https://github.com/AlexHowansky/ork-phpcs/tree/2.10.0"
+                "source": "https://github.com/AlexHowansky/ork-phpcs/tree/3.0.1"
             },
-            "time": "2025-05-12T23:45:00+00:00"
+            "time": "2026-04-27T23:30:29+00:00"
         },
         {
             "name": "outsanity/phpcs",
-            "version": "v0.4.0",
+            "version": "v1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dharple/outsanity-phpcs.git",
-                "reference": "3259fff4f4884e74332c54f8671f2c8ce3e655fa"
+                "reference": "cfccd6977f34b642f602dfb32b442fca889f5e30"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dharple/outsanity-phpcs/zipball/3259fff4f4884e74332c54f8671f2c8ce3e655fa",
-                "reference": "3259fff4f4884e74332c54f8671f2c8ce3e655fa",
+                "url": "https://api.github.com/repos/dharple/outsanity-phpcs/zipball/cfccd6977f34b642f602dfb32b442fca889f5e30",
+                "reference": "cfccd6977f34b642f602dfb32b442fca889f5e30",
                 "shasum": ""
             },
             "require": {
-                "ork/phpcs": "^2.0",
-                "squizlabs/php_codesniffer": "^3.5"
+                "ork/phpcs": "^3.0.1",
+                "squizlabs/php_codesniffer": "^4.0.1"
             },
-            "type": "library",
+            "type": "phpcodesniffer-standard",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-2-Clause"
@@ -1162,9 +1162,9 @@
             "description": "The Outsanity PHPCS rules",
             "support": {
                 "issues": "https://github.com/dharple/outsanity-phpcs/issues",
-                "source": "https://github.com/dharple/outsanity-phpcs/tree/master"
+                "source": "https://github.com/dharple/outsanity-phpcs/tree/v1.1.0"
             },
-            "time": "2020-02-03T02:13:41+00:00"
+            "time": "2026-05-30T08:05:34+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -2937,26 +2937,26 @@
         },
         {
             "name": "squizlabs/php_codesniffer",
-            "version": "3.13.5",
+            "version": "4.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHP_CodeSniffer.git",
-                "reference": "0ca86845ce43291e8f5692c7356fccf3bcf02bf4"
+                "reference": "0525c73950de35ded110cffafb9892946d7771b5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/0ca86845ce43291e8f5692c7356fccf3bcf02bf4",
-                "reference": "0ca86845ce43291e8f5692c7356fccf3bcf02bf4",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/0525c73950de35ded110cffafb9892946d7771b5",
+                "reference": "0525c73950de35ded110cffafb9892946d7771b5",
                 "shasum": ""
             },
             "require": {
                 "ext-simplexml": "*",
                 "ext-tokenizer": "*",
                 "ext-xmlwriter": "*",
-                "php": ">=5.4.0"
+                "php": ">=7.2.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^4.0 || ^5.0 || ^6.0 || ^7.0 || ^8.0 || ^9.3.4"
+                "phpunit/phpunit": "^8.4.0 || ^9.3.4 || ^10.5.32 || 11.3.3 - 11.5.28 || ^11.5.31"
             },
             "bin": [
                 "bin/phpcbf",
@@ -2981,7 +2981,7 @@
                     "homepage": "https://github.com/PHPCSStandards/PHP_CodeSniffer/graphs/contributors"
                 }
             ],
-            "description": "PHP_CodeSniffer tokenizes PHP, JavaScript and CSS files and detects violations of a defined set of coding standards.",
+            "description": "PHP_CodeSniffer tokenizes PHP files and detects violations of a defined set of coding standards.",
             "homepage": "https://github.com/PHPCSStandards/PHP_CodeSniffer",
             "keywords": [
                 "phpcs",
@@ -3012,7 +3012,7 @@
                     "type": "thanks_dev"
                 }
             ],
-            "time": "2025-11-04T16:30:35+00:00"
+            "time": "2025-11-10T16:43:36+00:00"
         },
         {
             "name": "symfony/dotenv",
