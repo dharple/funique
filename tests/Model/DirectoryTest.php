@@ -90,6 +90,6 @@ class DirectoryTest extends BaseTestCase
         $dir = $checkFiles[array_key_first($checkFiles)]->getDirectory();
         $entries = $dir->getEntries();
 
-        $this->assertEquals($entries, $checkFiles);
+        $this->assertEqualsCanonicalizing($entries, $checkFiles);
     }
 }
