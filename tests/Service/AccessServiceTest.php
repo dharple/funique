@@ -11,7 +11,6 @@
 
 namespace Outsanity\Tests\Funique\Service;
 
-use Exception;
 use Outsanity\Funique\Service\AccessService;
 use Outsanity\Tests\Funique\BaseTestCase;
 

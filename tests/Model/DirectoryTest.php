@@ -11,7 +11,6 @@
 
 namespace Outsanity\Tests\Funique\Model;
 
-use Exception;
 use Ramsey\Uuid\Uuid;
 use Outsanity\Funique\Model\Directory;
 use Outsanity\Funique\Model\File;

@@ -11,9 +11,7 @@
 
 namespace Outsanity\Tests\Funique\Model;
 
-use Exception;
 use Ramsey\Uuid\Uuid;
-use Outsanity\Funique\Model\Directory;
 use Outsanity\Funique\Model\ChecksumEntry;
 use Outsanity\Tests\Funique\BaseTestCase;
 

@@ -11,6 +11,7 @@
 
 namespace Outsanity\Funique\Command;
 
+use Symfony\Component\Console\Attribute\AsCommand;
 use Exception;
 use Outsanity\Funique\Model\BaseDirectory;
 use Outsanity\Funique\Model\ChecksumEntry;
@@ -30,15 +31,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 /**
  * Runs the full funique command.
  */
+#[AsCommand(name: 'funique', description: 'compares two sets of directories and/or checksum files, and reports files unique to one or the other')]
 class FuniqueCommand extends Command
 {
-    /**
-     * Script name
-     *
-     * @var string
-     */
-    protected static $defaultName = 'funique';
-
     /**
      * The directory service.
      *
@@ -100,7 +95,7 @@ class FuniqueCommand extends Command
      */
     protected function configure()
     {
-        $this->setDescription('compares two sets of directories and/or checksum files, and reports files unique to one or the other')
+        $this
             ->addOption('checksum', null, InputOption::VALUE_REQUIRED, 'the checksum algorithm to use', 'sha512')
             ->addOption('hidden', null, InputOption::VALUE_NONE, 'include hidden files and directories to review')
             ->addOption('left-checksum-file', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'the left-hand checksum file(s)', [])
@@ -121,7 +116,7 @@ class FuniqueCommand extends Command
      *
      * @throws Exception
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
         $debugIo = $output->isDebug() ? $io : new SymfonyStyle($input, new NullOutput());
@@ -180,7 +175,7 @@ class FuniqueCommand extends Command
                 }
 
                 $parent = null;
-                if (!preg_match('@^/@', $path)) {
+                if (!preg_match('@^/@', (string) $path)) {
                     $parent = new BaseDirectory(getcwd());
                 }
 
