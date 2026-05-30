@@ -9,7 +9,6 @@ return RectorConfig::configure()
         __DIR__ . '/src',
         __DIR__ . '/tests',
     ])
-    ->withPhpSets(php82: true)
     ->withImportNames(
         importShortClasses: false,
         removeUnusedImports: true,
