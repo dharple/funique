@@ -37,8 +37,6 @@ abstract class Summable extends Entry
      * Returns the checksum for the entire file.
      *
      * @param string $checksumAlgorithm The algorithm to use.
-     *
-     * @return string
      */
     abstract public function getSum(string $checksumAlgorithm): string;
 
@@ -48,8 +46,6 @@ abstract class Summable extends Entry
      *
      * @param Summable $other             The other file to review.
      * @param string   $checksumAlgorithm The checksum algorithm to use.
-     *
-     * @return bool
      *
      * @throws Exception
      */
@@ -74,8 +70,6 @@ abstract class Summable extends Entry
      * Whether or not the file is unique.  Defaults to true.
      *
      * @param ?bool $isUnique Pass to set, leave off to return.
-     *
-     * @return bool
      */
     public function isUnique(?bool $isUnique = null): bool
     {

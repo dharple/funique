@@ -49,7 +49,7 @@ class FileTest extends BaseTestCase
 
         $unit = 1024;
 
-        $size1 = random_int($minimumSize + ($unit * 1), $minimumSize + ($unit * 2));
+        $size1 = random_int($minimumSize + ($unit), $minimumSize + ($unit * 2));
         $size2 = random_int($minimumSize + ($unit * 4), $minimumSize + ($unit * 8));
 
         $filler1 = Uuid::uuid4() . "\n";

@@ -18,15 +18,11 @@ class AccessService
 {
     /**
      * Last access, generated using hrtime().
-     *
-     * @var ?string
      */
     protected static ?string $lastAccess = null;
 
     /**
      * Returns the last access based on hrtime()
-     *
-     * @return ?string
      */
     public static function getLastAccess(): ?string
     {

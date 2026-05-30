@@ -59,8 +59,6 @@ class File extends BaseFile
      * Sets the string to use to fill in mock files.
      *
      * @param string $filler What string to use as filler.
-     *
-     * @return self
      */
     public function setFiller(string $filler): self
     {
@@ -72,8 +70,6 @@ class File extends BaseFile
      * Sets the size of this mock file.
      *
      * @param int $size The size to set the mock file to.
-     *
-     * @return self
      */
     public function setSize(int $size): self
     {

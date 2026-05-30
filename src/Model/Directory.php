@@ -99,8 +99,6 @@ class Directory extends Entry
 
     /**
      * Returns the full path of this directory.
-     *
-     * @return string
      */
     public function getPath(): string
     {
@@ -109,8 +107,6 @@ class Directory extends Entry
 
     /**
      * Returns the relative path of this directory.
-     *
-     * @return string
      */
     public function getRelativePath(): string
     {

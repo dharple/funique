@@ -21,7 +21,7 @@ class ChecksumEntry extends Summable
      *
      * @var string
      */
-    protected $checksum = null;
+    protected $checksum;
 
     /**
      * The filename for this file
@@ -44,8 +44,6 @@ class ChecksumEntry extends Summable
 
     /**
      * Returns the full path information
-     *
-     * @return string
      */
     public function getPath(): string
     {
@@ -54,8 +52,6 @@ class ChecksumEntry extends Summable
 
     /**
      * Returns the relative path of this file.
-     *
-     * @return string
      */
     public function getRelativePath(): string
     {
@@ -66,8 +62,6 @@ class ChecksumEntry extends Summable
      * Returns the checksum for the entire file.
      *
      * @param string $checksumAlgorithm The algorithm to use.
-     *
-     * @return string
      */
     public function getSum(string $checksumAlgorithm): string
     {

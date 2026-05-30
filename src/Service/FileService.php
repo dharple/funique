@@ -27,8 +27,6 @@ class FileService
      * @param Summable     $fileRight         The right hand file.
      * @param string       $checksumAlgorithm The checksum algorithm to use.
      * @param SymfonyStyle $debugIo           A CLI styling interface.
-     *
-     * @return bool
      */
     public function checkContents(Summable $fileLeft, Summable $fileRight, string $checksumAlgorithm, SymfonyStyle $debugIo): bool
     {
@@ -52,8 +50,6 @@ class FileService
      * @param Summable     $fileLeft  The left hand file.
      * @param Summable     $fileRight The right hand file.
      * @param SymfonyStyle $debugIo   A CLI styling interface.
-     *
-     * @return bool
      */
     public function checkHardlink(Summable $fileLeft, Summable $fileRight, SymfonyStyle $debugIo): bool
     {

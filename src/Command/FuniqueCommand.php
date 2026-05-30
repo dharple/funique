@@ -112,8 +112,6 @@ class FuniqueCommand extends Command
      * @param InputInterface  $input  The input interface.
      * @param OutputInterface $output The output interface.
      *
-     * @return mixed
-     *
      * @throws Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -339,8 +337,6 @@ class FuniqueCommand extends Command
 
     /**
      * Determine whether or not any unique files exist in the set.
-     *
-     * @return bool
      */
     protected function hasUnique(mixed $filesLeft, mixed $filesRight, SymfonyStyle $debugIo): bool
     {

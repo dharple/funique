@@ -18,8 +18,6 @@ abstract class Entry implements \Stringable
 {
     /**
      * Returns the full path to this entry.
-     *
-     * @return string
      */
     public function __toString(): string
     {
@@ -28,15 +26,11 @@ abstract class Entry implements \Stringable
 
     /**
      * Returns the full path to this entry.
-     *
-     * @return string
      */
     abstract public function getPath(): string;
 
     /**
      * Returns the relative path to this entry.
-     *
-     * @return string
      */
     abstract public function getRelativePath(): string;
 }

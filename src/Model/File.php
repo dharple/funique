@@ -39,21 +39,21 @@ class File extends Summable
      *
      * @var string
      */
-    protected $checksum = null;
+    protected $checksum;
 
     /**
      * The algorithm used to calculate the currently stored checksum.
      *
      * @var string
      */
-    protected $checksumAlgorithm = null;
+    protected $checksumAlgorithm;
 
     /**
      * Cached device information
      *
      * @var int
      */
-    protected $device = null;
+    protected $device;
 
     /**
      * The directory that this file lives in
@@ -74,21 +74,21 @@ class File extends Summable
      *
      * @var int
      */
-    protected $inode = null;
+    protected $inode;
 
     /**
      * A checksum calculated based on the initial few bytes of the file.
      *
      * @var string
      */
-    protected $leadingSum = null;
+    protected $leadingSum;
 
     /**
      * Cached filesize
      *
      * @var int
      */
-    protected $size = null;
+    protected $size;
 
     /**
      * Constructs a new File
@@ -105,8 +105,6 @@ class File extends Summable
 
     /**
      * Returns the device for this file.
-     *
-     * @return int
      *
      * @throws Exception
      */
@@ -131,8 +129,6 @@ class File extends Summable
 
     /**
      * Returns the filename of this file.
-     *
-     * @return string
      */
     public function getFilename(): string
     {
@@ -141,8 +137,6 @@ class File extends Summable
 
     /**
      * Returns the inode for this file.
-     *
-     * @return int
      *
      * @throws Exception
      */
@@ -157,8 +151,6 @@ class File extends Summable
 
     /**
      * Returns the sum of the first n bytes.
-     *
-     * @return string
      *
      * @throws Exception
      */
@@ -182,8 +174,6 @@ class File extends Summable
 
     /**
      * Returns the full path information
-     *
-     * @return string
      */
     public function getPath(): string
     {
@@ -192,8 +182,6 @@ class File extends Summable
 
     /**
      * Returns the relative path of this file.
-     *
-     * @return string
      */
     public function getRelativePath(): string
     {
@@ -202,8 +190,6 @@ class File extends Summable
 
     /**
      * Returns the file size
-     *
-     * @return int
      *
      * @throws Exception
      */
@@ -220,8 +206,6 @@ class File extends Summable
      * Returns the checksum for the entire file.
      *
      * @param string $checksumAlgorithm The algorithm to use.
-     *
-     * @return string
      */
     public function getSum(string $checksumAlgorithm): string
     {
@@ -240,8 +224,6 @@ class File extends Summable
      * Determines whether or not this file is hard linked to another file.
      *
      * @param File $other The other file to review.
-     *
-     * @return bool
      *
      * @throws Exception
      */
@@ -273,8 +255,6 @@ class File extends Summable
      * Confirms that the filename is valid.
      *
      * @param string $file The filename to validate.
-     *
-     * @return void
      *
      * @throws \Exception
      */
