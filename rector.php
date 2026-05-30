@@ -13,5 +13,8 @@ return RectorConfig::configure()
         importShortClasses: false,
         removeUnusedImports: true,
     )
-    ->withPreparedSets(symfonyCodeQuality: true)
+    ->withPreparedSets(
+        deadCode: true,
+        symfonyCodeQuality: true,
+    )
     ->withComposerBased(symfony: true);
