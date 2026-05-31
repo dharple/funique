@@ -1,33 +1,55 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Claude Code (claude.ai/code) when working with
+code in this repository.
 
-## What This Is
+## Project Overview
 
-`funique` is a PHP CLI tool that compares two sets of directories and reports which files are unique to each side. It's hardlink-aware (useful for `backintime`/`rsnapshot` backups) and supports pre-computed checksum files as input in addition to live directories.
+`funique` is a PHP CLI tool that compares two sets of directories and reports
+which files are unique to each side. It's hardlink-aware (useful for
+`backintime`/`rsnapshot` backups) and supports pre-computed checksum files as
+input in addition to live directories.
+
+This PHP project is built into an executable, using [box] or a legacy build
+method.
 
 ## Commands
 
+### Setup
+
 ```bash
-# Run the tool directly
+composer install
+```
+
+### Running
+
+```bash
 bin/funique --left /path/to/left --right /path/to/right
+```
 
-# Run tests
-composer test           # or: vendor/bin/phpunit
-vendor/bin/phpunit --filter TestClassName   # run a single test class
+### Build PHAR
 
-# Static analysis
-composer phpstan        # PHPStan level 5
+```bash
+box compile        # preferred method
+bin/compile        # backup method
+```
 
-# Code style
-composer phpcs          # check
-composer phpcbf         # fix
+### Dev Tools
 
-# Automated refactoring
-composer rector
+```bash
+# All of these commands can take one or more filenames or directories on the
+# command line, to narrow the scope of their execution
 
-# Build PHAR
-composer compile        # or: bin/compile
+composer phpstan    # Static Analysis
+composer phpcs      # Check Code Style
+composer phpcbf     # Fix Code Style
+composer rector     # Show Opportunities for Automatic Refactoring
+composer test       # Run unit tests
+
+# Direct access tools
+
+vendor/bin/rector   # Do Automatic Refactoring
+vendor/bin/phpunit --filter <pattern> # Run unit tests matching a given pattern
 ```
 
 ## Architecture
@@ -68,3 +90,5 @@ Tests live in `tests/` with namespace `Outsanity\Tests\Funique`. `BaseTestCase` 
 - Coding standard enforced by `outsanity/phpcs` (see `phpcs.xml.dist`)
 - PHPStan level 5
 - Target PHP 8.2
+
+[box]: https://github.com/box-project/box/
