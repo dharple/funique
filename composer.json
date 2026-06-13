@@ -10,14 +10,14 @@
         }
     ],
     "require": {
-        "php": "^8.2.29",
+        "php": "^8.3.6",
         "symfony/console": "^6.4.41",
-        "symfony/flex": "^2.10.0"
+        "symfony/flex": "^2.11.0"
     },
     "require-dev": {
-        "outsanity/phpcs": "^1.1.0",
-        "phpstan/phpstan": "^2.2.1",
-        "phpunit/phpunit": "^10.5.63",
+        "outsanity/phpcs": "^1.1.1",
+        "phpstan/phpstan": "^2.2.2",
+        "phpunit/phpunit": "^12.5.29",
         "ramsey/uuid": "^4.9.2",
         "rector/rector": "^2.4.5",
         "symfony/dotenv": "^6.4.39",
@@ -26,7 +26,7 @@
     "config": {
         "optimize-autoloader": true,
         "platform": {
-            "php": "8.2.29"
+            "php": "8.3.6"
         },
         "preferred-install": {
             "*": "dist"
