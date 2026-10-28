@@ -10,7 +10,7 @@
         }
     ],
     "require": {
-        "php": "^8.3.6",
+        "php": "^8.3",
         "symfony/console": "^6.4.41",
         "symfony/flex": "^2.11.0"
     },
