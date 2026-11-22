@@ -43,4 +43,9 @@ gpg --verify funique.phar.asc
    attaching the phar and signature.
 7. Play [The Prisoning: Fletcher's Quest].
 
+## Post-Release
+
+1. Add new Unreleased section in `CHANGELOG.md`.
+2. Bump `bin/funique` to next minor dev version, e.g. `1.3.0-dev`.
+
 [The Prisoning: Fletcher's Quest]: https://playacclaim.com/the-prisoning-fletchers-quest/
