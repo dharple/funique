@@ -1,57 +1,58 @@
 # Changelog
+
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-# [Unreleased]
+## [Unreleased]
 
-# [1.1.1] - 2026-11-22
+## [1.1.1] - 2026-11-22
 
-## Fixed
+### Fixed
 
 - Updated reported version in built PHAR.
 
-# [1.1.0] - 2026-11-22
+## [1.1.0] - 2026-11-22
 
-## Changed
+### Changed
 
 - Minimum PHP version is now 8.3.6.
 - Updated 3rd party dependencies.
 
-# [1.0.0] - 2025-11-22
+## [1.0.0] - 2025-11-22
 
-## Changed
+### Changed
 
 - Minimum PHP version is now 8.2.29.
 - Updated 3rd party dependencies.
 
-# [0.8.2] - 2025-09-01
+## [0.8.2] - 2025-09-01
 
-## Changed
+### Changed
 
 - Updated 3rd party dependencies.
 - Updated Symfony recipes.
 
-# [0.8.1] - 2024-06-01
+## [0.8.1] - 2024-06-01
 
-## Fixed
+### Fixed
 
 - Added additional needed files to the build manifest.  `symfony/console` needs
   its `Resource/` directory.
 - Re-added leading blank line in verbose mode.  Symfony 6.x removed it.
 
-# [0.8.0] - 2024-05-01
+## [0.8.0] - 2024-05-01
 
-## Changed
+### Changed
 
 - Updated 3rd party dependencies.
 - Upgraded PHPUnit to version 10.
 - Upgraded Symfony to a minimum of 6.4.
 
-# [0.7.0] - 2024-01-20
+## [0.7.0] - 2024-01-20
 
-## Changed
+### Changed
 
 - Sleeping in the main processing loop now occurs when a certain number of
   iterations have occurred, *and* disk access has occurred.  This stops
@@ -62,56 +63,56 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   comparison between the checksums themselves only occurs once during
   processing.
 
-# [0.6.0] - 2023-12-02
+## [0.6.0] - 2023-12-02
 
-## Changed
+### Changed
 
 - Refactored and optimized main processing logic (ahead of a deeper
   refactoring).
 - Updated 3rd party dependencies.
 
-## Fixed
+### Fixed
 
 - Reduced the number of unnecessary reviews during the main processing logic.
 
-# [0.5.0] - 2023-10-14
+## [0.5.0] - 2023-10-14
 
-## Added
+### Added
 
 - Added rector support.
 - Added support for including hidden files and directories in the review set,
   by passing `--hidden` on the command line.
 
-## Changed
+### Changed
 
 - Updated code to rector's PHP 8.1 standards (with several exceptions).
 
-# [0.4.0] - 2023-01-21
+## [0.4.0] - 2023-01-21
 
-## Added
+### Added
 
 - When viewing debug output, a line will show how many unique files and
   checksums exist on both sides.
 
-## Changed
+### Changed
 
 - The main review loop looks for hardlinks first, then compares sizes and
   checksums when at least one non-unique pair exists.
 - The minimum PHP version is now 8.1.
 - The output now includes 'L:' and 'R:' to distinguish sides.
 
-## Fixed
+### Fixed
 
 - When viewing debug output, the size groups are now shown correctly.
 
-# [0.3.0] - 2023-01-14
+## [0.3.0] - 2023-01-14
 
-## Added
+### Added
 
 - Added support for considering a list of checksums as being on one side or the
   other.
 
-## Changed
+### Changed
 
 - Add Box configuration.
 - Add Travis configuration.
@@ -121,37 +122,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Upgraded PHP to a minimum of 7.4.
   - Upgraded Symfony to a minimum of 5.4.
 
-## Fixed
+### Fixed
 
 - Changed interpreter for CLI scripts to use `/usr/bin/env php` instead of
   `/usr/bin/php` to allow it to work on Travis.
 - Directories that contain `~` in the name no longer get replaced with `$HOME`.
 
-# [0.2.1] - 2020-11-14
+## [0.2.1] - 2020-11-14
 
-## Fixed
+### Fixed
 
 - Fixed fatal error encountered when a file could not be stat'd.
 - Fixed installation instructions and process.
 - Fixed problem loading relative paths from inside of the Phar archive.
 - Fixed shebang showing during phar run.
 
-# [0.2.0] - 2020-11-13
+## [0.2.0] - 2020-11-13
 
-## Added
+### Added
 
 - Basic documentation.
 - Script to compile funique into a .phar file.
 
-## Changed
+### Changed
 
 - Reduced code cyclomatic complexity through refactoring.
 - Updated to code to modern standards.
 - Tuned sleep and checksum sizes.
 
-# [0.1.0] - 2017-04-01
+## [0.1.0] - 2017-04-01
 
-## Added
+### Added
 
 - Initial Release
 
