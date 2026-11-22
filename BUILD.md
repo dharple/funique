@@ -19,7 +19,7 @@ For general instructions, please see the build instructions in `README.md`.
 
 ```bash
 git diff
-git commit -a -m "Release v1.2.0"
+git commit -a -m "Tag v1.2.0"
 git tag v1.2.0
 git tag # confirm your tag was created correctly
 git push
